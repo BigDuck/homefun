@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>安家无忧后台管理</title>
+    <meta name="keywords" content="安家无忧">
+    <meta name="description" content="厦门市思明区后埭溪28皇达大厦">
+
+    <!--[if lt IE 8]>
+    <script>
+        alert('已不支持IE6-8，请使用谷歌、火狐等浏览器\n或360、QQ等国产浏览器的极速模式浏览本页面！');
+    </script>
+    <![endif]-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" type="text/css" href="#{webroot}/css/bootstrap.min.css" charset="utf-8">
+    <link href="#{webroot}/css/plugins/datapicker/bootstrap-datepicker.css" rel="stylesheet">
+    <script src="#{webroot}/js/jquery-2.1.1.min.js"></script>
+    <script src="#{webroot}/js/bootstrap.min.js"></script>
+    <script src="#{webroot}/js/plugins/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="#{webroot}/js/plugins/layer/skin/layer.css" charset="UTF-8">
+</head>
+<body>
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li><a href="#{webroot}/admin/customer">订单列表</a></li>
+        <li class="active">新增</li>
+    </ol>
+    <h1>订单录入
+        <small>客户信息</small>
+    </h1>
+
+</div>
+<form method="POST">
+    <div class="col-md-10 col-lg-10">
+        <div class="col-sm-6 col-md-6">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">合同号：</label>
+                <div class="col-sm-9">
+                    <input type="number" id="contractNum" name="contractNum" class="form-control" placeholder="请输入合同号" required=""><span
+                        class="help-block m-b-none">格式：15090001</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">联系方式：</label>
+                <div class="col-sm-9">
+                    <input pattern="(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$"
+                           required="required" type="text" id="customerPhone" name="customerPhone" class="form-control"
+                           placeholder="请输入联系方式"> <span class="help-block m-b-none">固话格式：059212345678</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">客户坐标：</label>
+                <div class="col-sm-9">
+                    <input type="text" required id="customerGps" name="customerGps"  class="form-control" placeholder="左边地图查询，点击确认"> <span onclick="showMap();" class="glyphicon glyphicon-map-marker"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">用户类别：</label>
+                <div class="col-sm-9">
+                    <select class="form-control" name="customerType" id="customerType">
+                        #foreach($item in $userTypes)
+                            <option value="$item.id">$item.userType</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" id="sandbox-container">
+                <label class="col-sm-3 control-label">购卡日期：</label>
+                <div class="col-sm-9  input-append date">
+                    <input type="text" required name="customerBuytime" id="customerBuytime" class="form-control"/>
+                    <span class="add-on"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">客户名：</label>
+                <div class="col-sm-9">
+                    <input type="text" required="required" name="customerName" id="customerName" class="form-control"
+                           placeholder="请输入客户名字">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">服务地址：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="customerAddress" id="customerAddress" class="form-control" placeholder="请输客户地址">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">附近公交站：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="customerBus" id="customerBus" class="form-control" placeholder="公交站"> <span
+                        class="help-block m-b-none">控制在一俩站内</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">固定服务时间：</label>
+                <div class="col-sm-9">
+                    <input type="text" id="customerStime" name="customerStime" class="form-control" placeholder="请输入服务时间"> <span
+                        class="help-block m-b-none">如：每周一、五上午8:00-11:00</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">户型：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="customerHome" id="customerHome" class="form-control" placeholder="请输入户型"> <span
+                        class="help-block m-b-none">如：两房一厅约120平</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">住宅性质：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="customerHomeKind" id="customerHomeKind" class="form-control" placeholder="如：别墅 ">
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="align-content: center">
+            <input type="submit" class="btn btn-success" value="提交"/>
+            <input type="reset" class="btn btn-danger" value="取消"/>
+        </div>
+    </div>
+
+</form>
+
+<script src="#{webroot}/js/plugins/datapicker/bootstrap-datepicker.min.js"></script>
+<script src="#{webroot}/js/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+
+<script type="text/javascript">
+    $('#sandbox-container .input-append.date').datepicker({
+        language: "zh-CN"
+    });
+    $("form").submit(function () {
+        layer.load(2);
+        $.ajax({
+            url:"/admin/addCustomer",
+            method:"POST",
+            dataType:"JSON",
+            data:{'contractNum':$("#contractNum").val(),
+                'customerPhone':$("#customerPhone").val(),
+                'customerGps':$("#customerGps").val(),
+                'customerType':$("#customerType").val(),
+                'customerBuytime':$("#customerBuytime").val(),
+                'customerName':$("#customerName").val(),
+                'customerAddress':$("#customerAddress").val(),
+                'customerBus':$("#customerBus").val(),
+                'customerStime':$("#customerStime").val(),
+                'customerHome':$("#customerHome").val(),
+                'customerHomeKind':$("#customerHomeKind").val()
+            },
+            success:function (res) {
+                layer.closeAll("loading");
+                if(res==1){
+                    layer.alert('添加成功!', {
+                        icon: 1,
+                        skin: 'layer-ext-moon'
+                    });
+
+                }
+            },
+            error:function (err) {
+                layer.closeAll("loading");
+                layer.msg('失败了', {
+                    offset: 100,
+                    shift: 1
+                });            }
+        });
+        return false;
+    });
+    // 弹出需要展示的地图
+    function showMap(){
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: '/common/map'
+        });
+    }
+</script>
+</body>
+<!-- Data picker -->
+
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.homefun.dao.CustomerMapper">
+    <resultMap id="BaseResultMap" type="com.homefun.model.Customer">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <id column="ID" jdbcType="INTEGER" property="id"/>
+        <result column="CONTRACT_NUM" jdbcType="INTEGER" property="contractNum"/>
+        <result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName"/>
+        <result column="CUSTOMER_PHONE" jdbcType="VARCHAR" property="customerPhone"/>
+        <result column="CUSTOMER_ADDRESS" jdbcType="VARCHAR" property="customerAddress"/>
+        <result column="CUSTOMER_GPS" jdbcType="VARCHAR" property="customerGps"/>
+        <result column="CUSTOMER_BUS" jdbcType="VARCHAR" property="customerBus"/>
+        <result column="CUSTOMER_STIME" jdbcType="VARCHAR" property="customerStime"/>
+        <result column="CUSTOMER_HOME" jdbcType="VARCHAR" property="customerHome"/>
+        <result column="CUSTOMER_TYPE" jdbcType="INTEGER" property="customerType"/>
+        <result column="CUSTOMER_HOME_KIND" jdbcType="VARCHAR" property="customerHomeKind"/>
+        <result column="CUSTOMER_BUYTIME" jdbcType="TIMESTAMP" property="customerBuytime"/>
+        <result column="CUSTOMER_RTIME" jdbcType="TIMESTAMP" property="customerRtime"/>
+        <result column="CUSTOMER_ISDEL" jdbcType="BIT" property="customerIsdel"/>
+
+    </resultMap>
+    <select id="selectBuyTimeAndCount" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select
+        <choose>
+            <when test="time_code==1">
+                DATE_FORMAT(CUSTOMER_BUYTIME,'%Y') bTime ,
+            </when>
+            <when test="time_code==2">
+                DATE_FORMAT(CUSTOMER_BUYTIME,'%Y%m') bTime,
+            </when>
+            <when test="time_code==3">
+                DATE_FORMAT(CUSTOMER_BUYTIME,'%Y%u') bTime,
+            </when>
+            <when test="time_code==0">
+                DATE_FORMAT(CUSTOMER_BUYTIME,'%Y%m%d') bTime,
+            </when>
+            <otherwise>
+                DATE_FORMAT(CUSTOMER_BUYTIME,'%Y%m%d') bTime,
+            </otherwise>
+        </choose>
+      count(*) orderCount from customer
+        <if test="startTime!=NULL and endTime != NULL">
+            where CUSTOMER_BUYTIME  between #{startTime} and #{endTime}
+        </if>
+      group by bTime
+    </select>
+</mapper>

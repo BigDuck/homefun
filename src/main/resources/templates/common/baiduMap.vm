@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title>安家无忧后台管理</title>
+
+    <meta name="keywords" content="安家无忧">
+    <meta name="description" content="厦门市思明区后埭溪28皇达大厦">
+
+    <!--[if lt IE 8]>
+    <script>
+        alert('不支持IE6-8，请使用谷歌、火狐等浏览器\n或360、QQ等国产浏览器的极速模式浏览本页面！');
+    </script>
+    <![endif]-->
+
+    <link href="#{webroot}/css/bootstrap.min.css" rel="stylesheet">
+    <script src="#{webroot}/js/jquery-2.1.1.min.js"></script>
+
+    <!--引用百度地图API-->
+    <style type="text/css">
+        html,body{margin:0;padding:0;}
+        .iw_poi_title {color:#CC5522;font-size:14px;font-weight:bold;overflow:hidden;padding-right:13px;white-space:nowrap}
+        .iw_poi_content {font:12px arial,sans-serif;overflow:visible;padding-top:4px;white-space:-moz-pre-wrap;word-wrap:break-word}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5SB26lTiH8CC23shcjukjC5NOYma2yTg"></script>
+<style type="text/css">
+    .baidu{
+     padding-top: 50px;
+    }
+</style>
+</head>
+
+<body>
+<div class="wrapperfixed-sidebar full-height-layout gray-bg">
+    <div class="baidu" style="width: 700px; height:400px" id="choosePlaceMap">
+    </div>
+    <div class="row col-md-10 col-lg-10">
+        <input class="form-control" type="text" id="inputPlace"  placeholder="输入位置"/>
+        <input type="button" class="btn btn-success"  value="查找" onclick="searchMap()"/>
+        <input type="button" class="btn btn-success" id="transmit" value="确定">
+        <input  class="form-control" type="text" id="resultPlace" placeholder="此处显示位置坐标，如若未显示请缩小位置范围"/>
+    </div>
+</div>
+<script type="text/javascript">
+    //创建和初始化地图函数：
+    function initMap(){
+        createMap(118.187404,24.467689);//创建地图
+        setMapEvent();//设置地图事件
+        addMapControl();//向地图添加控件
+    }
+
+    //创建地图函数：
+    //创建地图函数：
+    function createMap(x, y) {
+        var map = new BMap.Map("choosePlaceMap");//在百度地图容器中创建一个地图
+        var point = new BMap.Point(x, y);//定义一个中心点坐标
+        var label = new BMap.Label(document.getElementById("inputPlace").value,point);
+        var marker = new BMap.Marker(point);        // 创建标注
+        map.addOverlay(marker);                     // 将标注添加到地图中
+        marker.setLabel(label);
+        map.centerAndZoom(point, 12);//设定地图的中心点和坐标并将地图显示在地图容器中
+
+
+        var icon = new BMap.Icon('../img/icon.png', new BMap.Size(20, 32), {
+            anchor: new BMap.Size(10, 30)
+        });
+
+        window.map = map;//将map变量存储在全局
+
+    }
+
+    //地图事件设置函数：
+    function setMapEvent(){
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+        map.addEventListener("click", function(e) {
+            document.getElementById("resultPlace").val(e.point.lng+"-"+e.point.lat);
+        });
+    }
+
+    //地图控件添加函数：
+    function addMapControl(){
+        //向地图中添加缩放控件
+        var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+        map.addControl(ctrl_nav);
+        //向地图中添加缩略图控件
+        var ctrl_ove = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:1});
+        map.addControl(ctrl_ove);
+        //向地图中添加比例尺控件
+        var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+        map.addControl(ctrl_sca);
+        map.setZoom(17);
+    }
+    // 搜索
+    function searchMap() {
+        var area = document.getElementById("inputPlace").value; //得到地区
+        console.log(area);
+        var ls = new BMap.LocalSearch(map);
+        ls.setSearchCompleteCallback(function(rs) {
+            if (ls.getStatus() == BMAP_STATUS_SUCCESS) {
+                var poi = rs.getPoi(0);
+                if (poi) {
+                    document.getElementById("resultPlace").value=poi.point.lng+"-"+ poi.point.lat;
+//                    console.log(poi.point.lng+"-"+ poi.point.lat);
+                    createMap(poi.point.lng, poi.point.lat);//创建地图(经度poi.point.lng,纬度poi.point.lat)
+                    setMapEvent();//设置地图事件
+                    addMapControl();//向地图添加控件
+                }
+            }
+        });
+        ls.search(area);
+    }
+
+    initMap();//创建和初始化地图
+    // 弹出层用的
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    //给父页面传值
+    $('#transmit').on('click', function(){
+
+        parent.$('#customerGps').val($("#resultPlace").val());
+        parent.layer.close(index);
+    });
+</script>
+</body>
+</html>

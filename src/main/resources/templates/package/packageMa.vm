@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>安家无忧后台管理</title>
+    <meta name="keywords" content="安家无忧">
+    <meta name="description" content="厦门市思明区后埭溪28皇达大厦">
+
+    <!--[if lt IE 8]>
+    <script>
+        alert('H+已不支持IE6-8，请使用谷歌、火狐等浏览器\n或360、QQ等国产浏览器的极速模式浏览本页面！');
+    </script>
+    <![endif]-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="#{webroot}/plugins/bootstraptable/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="#{webroot}/css/bootstrap.min.css" charset="utf-8">
+    <script src="#{webroot}/js/jquery-2.1.1.min.js"></script>
+    <script src="#{webroot}/js/plugins/layer/layer.js"></script>
+    <link rel="stylesheet" href="#{webroot}/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="#{webroot}/js/plugins/layer/skin/layer.css" charset="UTF-8">
+</head>
+<body>
+    <div>
+
+        <nav class="navbar navbar-default"  style="text-align:center" >
+            <div class="navbar-header" >
+                <span class="navbar-brand" href="#">套餐详情</span>
+                <span class="navbar-brand"><a class="btn-default" href="javascript:void(0)"  onclick="addType()">新增</a></span>
+            </div>
+        </nav>
+    </div>
+    <div id="mainDiv" class="row col-md-12">
+        #foreach($user in $types)
+            <div id="$!{user.id}panel"  class="col-md-4 col-lg-3 col-sm-6">
+            #if(${velocityCount}%5==1)
+            <div  class="animated rubberBand  panel panel-success">
+            #elseif(${velocityCount}%5==2)
+            <div  class="animated rubberBand  panel panel-info">
+            #elseif(${velocityCount}%5==3)
+            <div  class="animated rubberBand  panel panel-danger">
+            #elseif(${velocityCount}%5==4)
+            <div  class="animated rubberBand  panel panel-warning">
+            #elseif(${velocityCount}%5==0)
+            <div  class="animated rubberBand  panel panel-default">
+            #end
+                    <div class="panel-heading">
+                        <input type="hidden" id="typeId" value="$!{user.id}"/>
+                        <h3 id="$!{user.id}type" class="panel-title">$!{user.userType}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p class="lead">套餐描述：</p> <p  id="$!{user.id}desc"> $!{user.userDese}</p>
+                    </div>
+                    <div class="panel-footer">
+                        <button onclick="updateType($!{user.id})" class="btn btn-success">修改</button>
+                        <button class="btn btn-danger" onclick="deleteType($!{user.id})">删除</button>
+                    </div>
+                </div>
+            </div>
+        #end
+
+
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    function updateType(id){
+        console.log("加载");
+        var typeId=id+'type';
+        var typeValue=$("#"+typeId).text();
+        var descId=id+'desc';
+        var descValue=$("#"+descId).text();
+        console.log(typeValue+descValue);
+
+        // 更新
+        var updateHtml="<div class='col-sm-12' >"
+                +"<div class='row col-sm-12'><div class='form-group ' ><span >套餐名：</span><input id='upUserType' type='input' name='userType' value=' "+typeValue+"' class='form-control' /></div></div>  "
+                +"<div class='row col-sm-12'><div class='form-group '><span>描述：</span><input type='input' id='upUserDesc' name='userDese' value=' "+descValue+"' class='form-control' /></div></div>  "
+                +"<input type='hidden' value='"+id+"'/>"
+                +"<div class='row col-sm-12'><div class='form-group'><input onclick='toUpdate("+id+")' type='button' class='btn btn-success col-sm-6'  value='提交' class='form-control' /><input id='upCancle' class='col-sm-6  layui-layer-close layui-layer-close1 btn btn-danger' type='button' value='取消'></div></div></div>";
+        layer.open({
+            type: 1,
+            title: "<span class='glyphicon glyphicon-pencil'>修改</span>",
+            closeBtn: 1,
+            shadeClose: true,
+            content: updateHtml
+        });
+    }
+    function toUpdate(id) {
+        layer.load(2);
+        $.ajax({
+           url:"/type/update",
+            method:"POST",
+            dataType:"JSON",
+            data:{'id':id,'userType':$("#upUserType").val(),'userDese':$("#upUserDesc").val()},
+            success:function (res) {
+                layer.closeAll('loading');
+                console.log(res);
+                layer.alert('成功了 >_<', {
+                    skin: 'layui-layer-lan'
+                    ,closeBtn: 1
+                    ,shift: 2 //动画类型
+                });
+                var typeId=id+'type';
+               $("#"+typeId).text($("#upUserType").val());
+                var descId=id+'desc';
+                $("#"+descId).text($("#upUserDesc").val());
+                $("#upCancle").click();
+            },
+            error:function (err) {
+                layer.closeAll('loading');
+                layer.alert('失败了', {icon: 5});
+
+            }
+        });
+    }
+    // 删除套餐
+    function deleteType(id) {
+        var typeId=id+"panel";
+        layer.confirm('你确定要删除,如果有用户购买了该套餐，将删除失败',
+        {btn:['删除它','考虑下']},function () {
+                    layer.load(2);
+                    $.ajax({
+                        url:"/type/delete",
+                        method:"POST",
+                        dataType:"JSON",
+                        data:{'id':id,'_method':"DELETE"},
+                        success:function(res){
+                            layer.closeAll('loading');
+                            layer.alert('删除成功 >_<', {
+                                skin: 'layui-layer-lan'
+                                ,closeBtn: 1
+                                ,shift: 1 //动画类型
+                            });
+                            $("#"+typeId).attr("class",'animated  rotateOut');
+                            setTimeout(function () {
+                                $("#"+typeId).remove();
+
+                            },1000);
+
+                        },
+                        error:function(){
+                            layer.closeAll('loading');
+                            layer.alert('失败了，一定是姿势不对 T_T', {icon: 5});
+
+                        }
+                    });
+                },function () {
+                    layer.msg('确实要考虑下',{icon:6});
+                });
+       
+    }
+// 增加
+    function addType() {
+        var addHtml="<div class='col-sm-12' >"
+      +"<div class='row col-sm-12'><div class='form-group ' ><span >套餐名：</span><input id='addUserType' type='input' name='userType'  class='form-control' /></div></div>  "
+       +"<div class='row col-sm-12'><div class='form-group '><span>描述：</span><input type='input' id='addUserDesc' name='userDese'  class='form-control' /></div></div>  "
+        +"<div class='row col-sm-12'><div class='form-group'><input onclick='toAddType()' type='button' class='btn btn-success col-sm-6'  value='提交' class='form-control' /><input id='addCancle' class='col-sm-6  layui-layer-close layui-layer-close1 btn btn-danger' type='button' value='取消'></div></div></div>";
+        layer.open({
+            type: 1,
+            title: "<span class='glyphicon glyphicon-plus'>增加</span>",
+            closeBtn: 1,
+            shadeClose: true,
+            content: addHtml
+        });
+    }
+    function toAddType() {
+        layer.load(1);
+        var addUserType=$("#addUserType").val();
+        var userDese=$("#addUserDesc").val();
+        $.ajax({
+            url:"/type/addUserType",
+            dataType:"JSON",
+            method:"POST",
+            data:{'userType':addUserType,'userDese':$("#addUserDesc").val()},
+            success:function (res) {
+                layer.closeAll('loading');
+                if(res==0){
+                    layer.alert('新增失败，一定是姿势不够帅 T_T', {icon: 5});
+                    return false;
+                }
+                $("#addCancle").click();
+                var panelHtml=
+               " <div id='"+res+"panel' class='col-md-4 col-lg-3 col-sm-6'>"
+              +  "<div  class='animated flip  panel panel-success'><div class='panel-heading'> "
+              +  "<input type='hidden' id='typeId' value='"+res+"'/>"
+              +"<h3 id='"+res+"type' class='panel-title'>"+addUserType+"</h3> </div> <div class='panel-body'>"
+               +"<p class='lead'>套餐描述：</p> <p  id='"+res+"desc'>"+ userDese+"</p></div>  <div class='panel-footer'>"
+               +"<button onclick='updateType("+res+")' class='btn btn-success'>修改</button>"
+               +"<button class='btn btn-danger' onclick='deleteType("+res+")'>删除</button></div> </div>  </div>"
+               $("#mainDiv").append(panelHtml);
+            },
+            error:function (error) {
+                layer.closeAll('loading');
+                layer.alert('失败了，一定是姿势不对 T_T', {icon: 5});
+            }
+        });
+    }
+
+</script>
+<!-- 自定义js -->
+</body>
+
+</html>

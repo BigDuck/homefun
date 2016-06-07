@@ -1,0 +1,5 @@
+<script src="#{webroot}js/jquery-2.1.1.min.js"></script>
+<script src="#{webroot}js/bootstrap.min.js"></script>
+<script src="#{webroot}js/plugins/layer/layer.js"></script>
+<link rel="stylesheet" type="text/css" href="#{webroot}js/plugins/layer/skin/layer.css" charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="#{webroot}css/bootstrap.min.css" charset="utf-8">

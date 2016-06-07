@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>安家无忧后台管理</title>
+    <meta name="keywords" content="安家无忧">
+    <meta name="description" content="厦门市思明区后埭溪28皇达大厦">
+
+    <!--[if lt IE 8]>
+    <script>
+        alert('已不支持IE6-8，请使用谷歌、火狐等浏览器\n或360、QQ等国产浏览器的极速模式浏览本页面！');
+    </script>
+    <![endif]-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" type="text/css" href="#{webroot}/css/bootstrap.min.css" charset="utf-8">
+    <link href="#{webroot}/css/plugins/datapicker/bootstrap-datepicker.css" rel="stylesheet">
+    <script src="#{webroot}/js/jquery-2.1.1.min.js"></script>
+    <script src="#{webroot}/js/bootstrap.min.js"></script>
+    <script src="#{webroot}/js/plugins/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="#{webroot}/js/plugins/layer/skin/layer.css" charset="UTF-8">
+</head>
+<!--引用百度地图API-->
+<style type="text/css">
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .iw_poi_title {
+        color: #CC5522;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+        padding-right: 13px;
+        white-space: nowrap
+    }
+
+    .iw_poi_content {
+        font: 12px arial, sans-serif;
+        overflow: visible;
+        padding-top: 4px;
+        white-space: -moz-pre-wrap;
+        word-wrap: break-word
+    }
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5SB26lTiH8CC23shcjukjC5NOYma2yTg"></script>
+<style type="text/css">
+    .baidu {
+        padding-top: 50px;
+    }
+</style>
+<body>
+<div class="panel-group" id="accordion">
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion"
+           href="#collapseOne">
+            用户分布
+        </a>
+    </div>
+        <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body">
+        <form id="formSearch" class="form-horizontal">
+            <div class="form-group" style="margin-top:15px">
+                <label class="control-label col-sm-1" for="txt_search_departmentname">查询条件</label>
+                <div class="col-sm-2">
+                    <select id="selectCon" class="form-control">
+                        <option value="0">请选择用户类型</option>
+                        #foreach($item in $userTypes)
+                            <option value="$item.id">$item.userType</option>
+                        #end
+                    </select>
+                </div>
+                <div class="col-sm-2"><input id="params" name="params" class="form-control" placeholder="输入地址"
+                                             type="text"/></div>
+                <label class="control-label col-sm-1" for="txt_search_statu">时间</label>
+                <div class="col-sm-4">
+                    <div class="input-daterange input-group" id="datepicker">
+                        <input type="text" id="startTime" class="form-control" name="startTime" placeholder="选择开始时间"/>
+                        <span class="input-group-addon">到</span>
+                        <input type="text" class=" form-control" id="endTime" name="endTime" placeholder="选择结束时间"/>
+                    </div>
+                </div>
+                <div class="col-sm-2" style="text-align:left;">
+                    <div class="row">
+                        <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="searchMap()">查询</button>
+                        <input type="reset" class="btn btn-danger" value="重置"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+        </div>
+        </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-danger col-sm-8 col-md-8">
+        <div class="panel-heading">订单分布标注</div>
+        <div id="choosePlaceMap" class="panel-body">
+        </div>
+    </div>
+
+    <div class="panel panel-info col-sm-3 col-md-3">
+        <div class="panel-heading">操作</div>
+            <div class="panel-body">
+        <input type="button" value="连线" class="btn btn-circle btn-success"/>
+            </div>
+</div>
+ <script src="#{webroot}/js/plugins/datapicker/bootstrap-datepicker.min.js"></script>
+<script src="#{webroot}/js/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#choosePlaceMap").height($(window).height() * 0.8);
+        //  $("#choosePlaceMap").width($(window).width()*0.8)
+
+        loadData("/order/detail");
+
+    });
+    function loadData(dataUrl) {
+        layer.load(0);
+
+        $.ajax({
+            url: dataUrl,
+            dataType: "JSON",
+            method: "GET",
+            success: function (data) {
+                layer.closeAll("loading");
+                initMap(data);
+            },
+            error: function (err) {
+                layer.closeAll("loading");
+
+                layer.alert("加载错误", 1);
+            }
+        });
+    }
+    //创建和初始化地图函数：
+    function initMap(data) {
+        function theLocation(){
+            var city = "厦门市";
+            if(city != ""){
+                map.centerAndZoom(city,11);      // 用城市名设置地图中心点
+            }
+        }
+        createMap(data);//创建地图
+        setMapEvent();//设置地图事件
+        addMapControl();//向地图添加控件
+    }
+
+    //创建地图函数：
+    //创建地图函数：
+    function createMap(data) {
+        var map = new BMap.Map("choosePlaceMap");//在百度地图容器中创建一个地图
+        // map.setMapStyle({style:'midnight'});
+        var data_info = [];
+        map.centerAndZoom("厦门", 15);      // 初始化地图,用城市名设置地图中心点
+        map.setMapStyle({style: 'midnight'});
+
+
+        for (i = 0; i < data.length; i++) {
+            var tempArr = new Array();
+            tempArr[0] = data[i].x;
+            tempArr[1] = data[i].y;
+            tempArr[2] = data[i].label + data[i].marker;
+            data_info.push(tempArr);
+        }
+        var opts = {
+            width: 200,     // 信息窗口宽度
+            height: 100,     // 信息窗口高度
+            title: "详情", // 信息窗口标题
+            enableMessage: true//设置允许信息窗发送短息
+        }
+        var icon = new BMap.Icon('../img/icon.png', new BMap.Size(20, 32), {
+            anchor: new BMap.Size(10, 30)
+        });
+        for (var i = 0; i < data_info.length; i++) {
+            var marker = new BMap.Marker(new BMap.Point(data_info[i][0], data_info[i][1]),{icon:icon});  // 创建标注
+            var content = data_info[i][2];
+            map.addOverlay(marker);               // 将标注添加到地图中
+            addClickHandler(content, marker);
+        }
+        var zongbuMarker=new BMap.Marker(new BMap.Point(118.112034,24.4778));
+        zongbuMarker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        map.addOverlay(zongbuMarker);
+
+        huizhanMarker=new BMap.Marker(new BMap.Point(118.187404,24.467689));
+        map.addOverlay(huizhanMarker);
+
+        marker.addEventListener("click", function () {
+            map.openInfoWindow(infoWindow, point); //开启信息窗口
+        });
+
+        function addClickHandler(content, marker) {
+            marker.addEventListener("click", function (e) {
+                        openInfo(content, e)
+                    }
+            );
+        }
+
+        function openInfo(content, e) {
+            var p = e.target;
+            var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+            var infoWindow = new BMap.InfoWindow(content, opts);  // 创建信息窗口对象
+            map.openInfoWindow(infoWindow, point); //开启信息窗口
+        }
+
+
+        window.map = map;//将map变量存储在全局
+
+    }
+
+    //地图事件设置函数：
+    function setMapEvent() {
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+        map.addEventListener("click", function (e) {
+
+        });
+    }
+    //地图控件添加函数：
+    function addMapControl() {
+        //向地图中添加缩放控件
+        var ctrl_nav = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_LARGE});
+        map.addControl(ctrl_nav);
+        //向地图中添加缩略图控件
+        var ctrl_ove = new BMap.OverviewMapControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT, isOpen: 1});
+        map.addControl(ctrl_ove);
+        //向地图中添加比例尺控件
+        var ctrl_sca = new BMap.ScaleControl({anchor: BMAP_ANCHOR_BOTTOM_LEFT});
+        map.addControl(ctrl_sca);
+        map.setZoom(17);
+    }
+    function searchMap() {
+//        if($("#selectCon").val()=="0"&&$("#params").val()!=""){
+//            layer.tips("选我选我","#selectCon");
+//            layer.alert("请选择查询条件");
+//            return false;
+//        }
+        var dataUrl="/order/detail"
+        var isFirst=0;
+        if($("#startTime").val()!=null&&$("#startTime").val()!=""){
+            dataUrl+="?startTime="+$("#startTime").val()+"&endTime="+$("#endTime").val();
+            isFirst=1;
+        }
+        if($("#params").val()!=null&&$("#params").val()!=""){
+            if(isFirst==1){
+                dataUrl+="&params="+$("#params").val()+"&searchCondition=3";
+            }else {
+                dataUrl+="?params="+$("#params").val()+"&searchCondition=3";
+            }
+        }
+        console.log(dataUrl.length);
+        if(dataUrl.length>15){
+            dataUrl=dataUrl+"&userTypeId="+$("#selectCon").val();
+        }else {
+            dataUrl=dataUrl+"?userTypeId="+$("#selectCon").val();
+        }
+        loadData(dataUrl);
+
+    }
+    $('#datepicker').datepicker({
+        language: "zh-CN"
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/*
+ * ©2016 wupjhy.cn.  All rights reserved.
+ */
+
+
+@font-face {font-family: "iconfont";
+  src: url('0to9iconfont.eot?t=1465263894'); /* IE9*/
+  src: url('0to9iconfont.eot?t=1465263894#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/fonts/iconfont.woff?t=1465263894') format('woff'), /* chrome, firefox */
+  url('/fonts/iconfont.ttf?t=1465263894') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('/fonts/iconfont.svg?t=1465263894#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-shuzi0:before { content: "\e60c"; }
+.icon-shuzi2:before { content: "\e60e"; }
+.icon-shuzi3:before { content: "\e60f"; }
+.icon-shuzi5:before { content: "\e611"; }
+.icon-shuzi6:before { content: "\e612"; }
+.icon-shuzi1:before { content: "\e60d"; }
+.icon-shuzi9:before { content: "\e615"; }
+.icon-shuzi7:before { content: "\e613"; }
+.icon-shuzi4:before { content: "\e610"; }
+.icon-shuzi8:before { content: "\e614"; }

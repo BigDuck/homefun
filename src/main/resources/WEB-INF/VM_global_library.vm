@@ -1,0 +1,11 @@
+#macro(test)
+#end
+#macro(man)
+#end
+##支持多参数
+#macro(sayHello $youName)
+Hello <strong> $youName</strong>
+#end
+#macro(webroot)
+    ${springMacroRequestContext.contextPath}
+#end

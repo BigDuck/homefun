@@ -1,0 +1,86 @@
+{
+  "title": {
+    "text": "套餐占比",
+    "x": "center"
+  },
+  "tooltip": {
+    "trigger": "item",
+    "formatter": "{a} <br/>{b} : {c} ({d}%)\""
+  },
+  "legend": {
+    "x": "center",
+    "y": "bottom",
+    "data": {
+      "type": "category",
+      "data": [
+        "5.8活动",
+        "  12次卡",
+        "522套餐",
+        " 24次年卡"
+      ]
+    }
+  },
+  "toolbox": {
+    "show": true,
+    "orient": "vertical",
+    "feature": {
+      "mark": {
+        "show": true
+      },
+      "dataView": {
+        "show": true,
+        "readOnly": false
+      },
+      "magicType": {
+        "show": true,
+        "type": [
+          "pie",
+          "funnel"
+        ]
+      },
+      "restore": {
+        "show": true
+      },
+      "saveAsImage": {
+        "show": true
+      }
+    }
+  },
+  "calculable": true,
+  "series": [
+    {
+      "name": "套餐比例",
+      "type": "pie",
+      "radius": [
+        30,
+        80
+      ],
+      "center": [
+        "50%",
+        200
+      ],
+      "roseType": "area",
+      "x": "50%",
+      "max": 40,
+      "sort": "ascending",
+      "data": [
+        {
+          "name": "5.8活动",
+          "value": 11
+        },
+        {
+          "name": "  12次卡",
+          "value": 1
+        },
+        {
+          "name": "522套餐",
+          "value": 1
+        },
+        {
+          "name": " 24次年卡",
+          "value": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.homefun.dao.ServiceDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.homefun.model.ServiceDetail" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="SERVICE_ID" property="serviceId" jdbcType="VARCHAR" />
+    <result column="EMP_NUM" property="empNum" jdbcType="VARCHAR" />
+    <result column="SERVICE_TIME" property="serviceTime" jdbcType="TIMESTAMP" />
+    <result column="SERVICE_ORDER" property="serviceOrder" jdbcType="VARCHAR" />
+    <result column="SERVICE_CALLBACK" property="serviceCallback" jdbcType="VARCHAR" />
+    <result column="SERVICE_SCORE" property="serviceScore" jdbcType="INTEGER" />
+    <result column="SERVICE_OTHER" property="serviceOther" jdbcType="INTEGER" />
+    <result column="SERVICE_COUNT" property="serviceCount" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>
