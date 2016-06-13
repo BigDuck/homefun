@@ -155,7 +155,7 @@
                     "<label>购卡时间:</label><sapn>" + wu + "</span>" +
                     "</div>" +
                     "</div>" +
-                    "<input type='button' class='btn btn-success' onclick='serviceDetail(" + row.id + ")'  value='服务详情'/> "
+                    "<input type='button' class='btn btn-success' onclick='serviceDetail(" + row.contractNum + ")'  value='服务详情'/> "
             return detail;
         }
 

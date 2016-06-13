@@ -20,11 +20,11 @@ import java.util.List;
 
 public class Test {
     public static void main(String[] args) {
-            int arr[]=new int[1];
-        int j=0;
-        for (int i = 0; i <10 ; i++) {
-            arr[0]=j++;
+       List<String> hello=new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            hello.add("agddfd");
         }
-        System.out.println(arr.length);
+        System.out.println("结果："+hello);
+        System.out.println(hello.toString().substring(1,hello.toString().length()-1).replace(",","+").trim());
     }
 }

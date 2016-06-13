@@ -99,10 +99,6 @@ public class IndexController extends BaseController {
         myLogeer.info("更新结果{}", res);
         return res;
     }
-    @RequestMapping(value = "/detail",method = RequestMethod.GET)
-    public Object searchCustom(@RequestParam(name = "id")int id){
-        myLogeer.info("id:{}",id);
-        return "customer/serviceDetail";
-    }
+
 
 }

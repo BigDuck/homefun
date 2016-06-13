@@ -1,9 +1,8 @@
 package com.homefun.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.sun.tools.javac.util.List;
+
+import javax.persistence.*;
 import java.util.Date;
 
 @Table(name = "service_detail")
@@ -18,7 +17,7 @@ public class ServiceDetail  extends BaseEntity {
     private String serviceId;
 
     /**
-     * 员工工号
+     * 员工工号多个员工时默认以+分割
      */
     @Column(name = "EMP_NUM")
     private String empNum;
@@ -58,6 +57,19 @@ public class ServiceDetail  extends BaseEntity {
      */
     @Column(name = "SERVICE_COUNT")
     private Integer serviceCount;
+    /**
+     * 服务的员工编号
+     */
+    @Transient
+    private List<String> emp_list;
+
+    public List<String> getEmp_list() {
+        return emp_list;
+    }
+
+    public void setEmp_list(List<String> emp_list) {
+        this.emp_list = emp_list;
+    }
 
     /**
      * 获取服务id(uuid)

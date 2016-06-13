@@ -31,7 +31,7 @@ public class ServletConfig extends SpringBootServletInitializer {
 	@Order
 	public ServletRegistrationBean statViewServlet() {
 		StatViewServlet servlet = new StatViewServlet();
-		ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/druid/*");
+		ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/dev/druid/*");
 		return bean;
 	}
 	

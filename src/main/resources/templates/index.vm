@@ -354,9 +354,9 @@
                     <a class="J_menuItem" href="css_animation.html"><i class="fa fa-magic"></i> <span class="nav-label">CSS动画</span></a>
                 </li>
                 <li>
-                    <a href="index.html#"><i class="fa fa-cutlery"></i> <span class="nav-label">工具 </span><span class="fa arrow"></span></a>
+                    <a href="index.html#"><i class="fa fa-cutlery"></i> <span class="nav-label">运营人员 </span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="form_builder.html">表单构建器</a>
+                        <li><a class="J_menuItem" href="/dev/druid/index.html">Druid监控</a>
                         </li>
                     </ul>
                 </li>

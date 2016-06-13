@@ -1,0 +1,5 @@
+<body class="gray-bg">
+<div class="row">
+<iframe src="#{webroot}/dev/druid" style="width:100%;height: 100%"></iframe>
+</div>
+</body>
