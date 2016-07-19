@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <link href="/plugins/check/switchery.min.css" rel="stylesheet"/>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/js/plugins/layer/skin/layer.css">
+</head>
+<body>
+
+
+<div class="container-fluid">
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <p class="lead">员工列表</p>
+    </div>
+    <div class="panel-body">
+        <section class="section">
+            <div class="example container" id="empLists">
+
+            </div>
+        </section>
+    </div>
+   <div class="panel-footer">
+       <input type="button" class="btn btn-success" onclick="sureSelect()" id="surebtn" value="确定" title="点击确定所选阿姨"/>
+   </div>
+</div>
+</div>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/plugins/check/switchery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        layer.load(1);
+        $.ajax({
+            url: "/admin/emp/list",
+            method: "GET",
+            dataType: "JSON",
+            data: {'type': 1},
+            success: function (data) {
+                layer.closeAll("loading");
+                $.each(data, function (a, b) {
+                    var htmlCon = "<span style='padding: inherit'><input type='checkbox' class='js-switch' title='"+b['empName']+"' value='" + b['empNum'] + "'/><span>" + b['empName'] + "</span></span>";
+                    $("#empLists").append(htmlCon);
+                });
+                if (Array.prototype.forEach) {
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                    });
+                } else {
+                    var elems = document.querySelectorAll('.js-switch');
+                    for (var i = 0; i < elems.length; i++) {
+                        var switchery = new Switchery(elems[i]);
+                    }
+                }
+            },
+            error: function (err) {
+
+            }
+        });
+    });
+
+    function sureSelect() {
+        // 获取所有选择checkbox的元素
+        var elemsRes = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+        // 遍历元素 得到选中的元素
+        var resultSelect="";
+        var resultNum="";
+        elemsRes.forEach(function (html) {
+            // 如果是选中的元素获取选中的值
+            if(html.checked){
+                resultSelect+=html.title+"-"; // 记录选中的阿姨工号
+                resultNum+=html.value+"-";
+            }
+        });
+        // 回填在父窗口
+        parent.$('#serviceEmpName').val(resultSelect.substring(0,resultSelect.lastIndexOf("-")));
+        parent.$('#serviceEmp').val(resultNum.substring(0,resultNum.lastIndexOf("-")));
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);
+    }
+</script>
+<div style="text-align:center;clear:both">
+</div>
+</body>
+</html>

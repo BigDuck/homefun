@@ -6,10 +6,7 @@ package com.homefun.controller;
 
 import com.homefun.util.DateUtil;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Name：Test
@@ -20,11 +17,15 @@ import java.util.List;
 
 public class Test {
     public static void main(String[] args) {
-       List<String> hello=new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            hello.add("agddfd");
-        }
-        System.out.println("结果："+hello);
-        System.out.println(hello.toString().substring(1,hello.toString().length()-1).replace(",","+").trim());
+//       List<String> hello=new ArrayList<>();
+//        for (int i = 0; i < 1; i++) {
+//            hello.add("agddfd");
+//        }
+//        System.out.println("结果："+hello);
+//        System.out.println(hello.toString().substring(1,hello.toString().length()-1).replace(",","+").trim());
+//   String string="gdsgsdg";
+//        String [] res=string.split("-");
+//        System.out.println(res[0]);
+        System.out.println(UUID.randomUUID().toString().replace("-",""));
     }
 }

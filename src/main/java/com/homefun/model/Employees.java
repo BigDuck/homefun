@@ -4,8 +4,14 @@
 
 package com.homefun.model;
 
-import javax.persistence.*;
+import com.homefun.util.Constant;
 
+import javax.persistence.*;
+import javax.validation.Constraint;
+
+/**
+ * 员工基本信息类
+ */
 public class Employees extends BaseEntity {
     private static final long serialVersionUID = -3643161333674075500L;
 
@@ -56,15 +62,125 @@ public class Employees extends BaseEntity {
     private String empDese;
 
     @Column(name = "EMP_OTHER")
-    private Integer empOther;
+    private String empOther;
     /**
      * 员工归属店铺
      */
     @Column(name = "EMP_BELONG")
     private String empBelong;
+    /**
+     * 归属小组
+     */
+    @Column(name = "EMP_GROUP")
+    private String empGroup;
 
+    /**
+     * 工作（外键）
+     */
+    @Column(name = "EMP_JOB")
+    private String empJob;
+    /**
+     * 员工状体
+     */
+    @Column(name = "EMP_STATE")
+    private Integer empState;
+    /**
+     * 店铺名字
+     */
+    @Transient
+    private String shopName;
+    /**
+     * 工作名字
+     */
+    @Transient
+    private String jobName;
+    /**
+     * 员工状态名字
+     */
+    @Transient
+    private String stateName;
 
+    public Employees(String empName, String empNum) {
+        this.empName = empName;
+        this.empNum = empNum;
+    }
 
+    public Employees() {
+    }
+
+    public Employees(String empName, String empNum, String empIdcard, String empAddress, Boolean empSex, Integer empAge, String empPhoto, String empDese, String empOther, String empBelong) {
+        this.empName = empName;
+        this.empNum = empNum;
+        this.empIdcard = empIdcard;
+        this.empAddress = empAddress;
+        this.empSex = empSex;
+        this.empAge = empAge;
+        this.empPhoto = empPhoto;
+        this.empDese = empDese;
+        this.empOther = empOther;
+        this.empBelong = empBelong;
+    }
+
+    public Employees(int id, String empName, String empPhoto, String jobName, String shopName, String stateName) {
+        this.id = id;
+        this.empName = empName;
+        this.empPhoto = empPhoto;
+        this.jobName = jobName;
+        this.shopName = shopName;
+        this.stateName = stateName;
+    }
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
+    public String getShopName() {
+        this.shopName = Constant.SHOP_NAME.get(this.getEmpBelong());
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+
+        this.shopName = shopName;
+    }
+
+    public String getStateName() {
+        this.stateName = Constant.EMP_STATE.get(this.getEmpState());
+
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    public String getEmpJob() {
+        return empJob;
+    }
+
+    public void setEmpJob(String empJob) {
+        this.empJob = empJob;
+    }
+
+    public String getEmpGroup() {
+        return empGroup;
+    }
+
+    public void setEmpGroup(String empGroup) {
+        this.empGroup = empGroup;
+    }
+
+    public Integer getEmpState() {
+        return empState;
+    }
+
+    public void setEmpState(Integer empState) {
+        this.empState = empState;
+    }
 
     /**
      * 获取员工名字
@@ -205,14 +321,14 @@ public class Employees extends BaseEntity {
     /**
      * @return EMP_OTHER
      */
-    public Integer getEmpOther() {
+    public String getEmpOther() {
         return empOther;
     }
 
     /**
      * @param empOther
      */
-    public void setEmpOther(Integer empOther) {
+    public void setEmpOther(String empOther) {
         this.empOther = empOther;
     }
 
@@ -230,5 +346,28 @@ public class Employees extends BaseEntity {
 
     public void setEmpBelong(String empBelong) {
         this.empBelong = empBelong;
+    }
+
+    @Override
+    public String toString() {
+        return "Employees{" +
+                "id=" + id +
+                ", empName='" + empName + '\'' +
+                ", empNum='" + empNum + '\'' +
+                ", empIdcard='" + empIdcard + '\'' +
+                ", empAddress='" + empAddress + '\'' +
+                ", empSex=" + empSex +
+                ", empAge=" + empAge +
+                ", empPhoto='" + empPhoto + '\'' +
+                ", empDese='" + empDese + '\'' +
+                ", empOther='" + empOther + '\'' +
+                ", empBelong='" + empBelong + '\'' +
+                ", empGroup='" + empGroup + '\'' +
+                ", empJob='" + empJob + '\'' +
+                ", empState=" + empState +
+                ", shopName='" + shopName + '\'' +
+                ", jobName='" + jobName + '\'' +
+                ", stateName='" + stateName + '\'' +
+                '}';
     }
 }

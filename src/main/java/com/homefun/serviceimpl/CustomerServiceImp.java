@@ -108,6 +108,7 @@ public class CustomerServiceImp extends BaseService<Customer> implements Custome
         }
         Example example = new Example(Customer.class);
         Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("customerIsdel", false);
         if (btRequestParams.getSearchCondition() != 0) {
             switch (btRequestParams.getSearchCondition()) {
                 case 1:
@@ -121,6 +122,7 @@ public class CustomerServiceImp extends BaseService<Customer> implements Custome
                     break;
             }
         }
+
         if (btRequestParams.isPaging()) {
             int page = btRequestParams.getOffset() / btRequestParams.getLimit() + 1;
             PageHelper.startPage(page, btRequestParams.getLimit(), true);

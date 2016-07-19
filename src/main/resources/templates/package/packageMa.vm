@@ -51,7 +51,14 @@
                         <h3 id="$!{user.id}type" class="panel-title">$!{user.userType}</h3>
                     </div>
                     <div class="panel-body">
-                        <p class="lead">套餐描述：</p> <p  id="$!{user.id}desc"> $!{user.userDese}</p>
+                        <div class="form-group">
+                            <label for="$!{user.id}desc">套餐描述:</label> <span   id="$!{user.id}desc"> $!{user.userDese}</span >
+                        </div>
+                        <div class="form-group">
+                            <label for="$!{user.id}Times">服务次数:</label><span id="$!{user.id}Times">$!{user.userTimes}</span>
+                        </div>
+                        <div><label for="$!{user.id}Sale">售价:</label><span id="$!{user.id}Sale">$!{user.userSale}</span></div>
+
                     </div>
                     <div class="panel-footer">
                         <button onclick="updateType($!{user.id})" class="btn btn-success">修改</button>
@@ -73,12 +80,18 @@
         var typeValue=$("#"+typeId).text();
         var descId=id+'desc';
         var descValue=$("#"+descId).text();
+        var timesId=id+"Times";
+        var timesValue=$("#"+timesId).text();
+        var saleId=id+"Sale";
+        var saleValue=$("#"+saleId).text();
         console.log(typeValue+descValue);
 
         // 更新
         var updateHtml="<div class='col-sm-12' >"
                 +"<div class='row col-sm-12'><div class='form-group ' ><span >套餐名：</span><input id='upUserType' type='input' name='userType' value=' "+typeValue+"' class='form-control' /></div></div>  "
                 +"<div class='row col-sm-12'><div class='form-group '><span>描述：</span><input type='input' id='upUserDesc' name='userDese' value=' "+descValue+"' class='form-control' /></div></div>  "
+                +"<div class='row col-sm-12'><div class='form-group '><span>服务次数：</span><input type='number' id='upUserTimes' name='userTimes' value='"+timesValue+"' class='form-control' /></div></div>  "
+                +"<div class='row col-sm-12'><div class='form-group '><span>价格：</span><input type='number' id='upUserSale' name='userSale' value='"+saleValue+"' class='form-control' /></div></div>  "
                 +"<input type='hidden' value='"+id+"'/>"
                 +"<div class='row col-sm-12'><div class='form-group'><input onclick='toUpdate("+id+")' type='button' class='btn btn-success col-sm-6'  value='提交' class='form-control' /><input id='upCancle' class='col-sm-6  layui-layer-close layui-layer-close1 btn btn-danger' type='button' value='取消'></div></div></div>";
         layer.open({
@@ -95,7 +108,7 @@
            url:"/type/update",
             method:"POST",
             dataType:"JSON",
-            data:{'id':id,'userType':$("#upUserType").val(),'userDese':$("#upUserDesc").val()},
+            data:{'id':id,'userType':$("#upUserType").val(),'userDese':$("#upUserDesc").val(),'userTimes':$("#upUserTimes").val(),'userSale':$("#upUserSale").val()},
             success:function (res) {
                 layer.closeAll('loading');
                 console.log(res);
@@ -108,6 +121,10 @@
                $("#"+typeId).text($("#upUserType").val());
                 var descId=id+'desc';
                 $("#"+descId).text($("#upUserDesc").val());
+                var timesId=id+'Times'
+                $("#"+timesId).text($("#upUserTimes").val());
+                var saleId=id+'Sale';
+                $("#"+saleId).text($("#upUserSale").val());
                 $("#upCancle").click();
             },
             error:function (err) {
@@ -158,7 +175,9 @@
         var addHtml="<div class='col-sm-12' >"
       +"<div class='row col-sm-12'><div class='form-group ' ><span >套餐名：</span><input id='addUserType' type='input' name='userType'  class='form-control' /></div></div>  "
        +"<div class='row col-sm-12'><div class='form-group '><span>描述：</span><input type='input' id='addUserDesc' name='userDese'  class='form-control' /></div></div>  "
-        +"<div class='row col-sm-12'><div class='form-group'><input onclick='toAddType()' type='button' class='btn btn-success col-sm-6'  value='提交' class='form-control' /><input id='addCancle' class='col-sm-6  layui-layer-close layui-layer-close1 btn btn-danger' type='button' value='取消'></div></div></div>";
+           +"<div class='row col-sm-12'><div class='form-group '><span>服务次数：</span><input type='number' id='adduserTimes' name='userTimes'  class='form-control' /></div></div>  "
+          +"<div class='row col-sm-12'><div class='form-group '><span>价格：</span><input type='number' id='addUserSale' name='userSale'  class='form-control' /></div></div>  "
+                +"<div class='row col-sm-12'><div class='form-group'><input onclick='toAddType()' type='button' class='btn btn-success col-sm-6'  value='提交' class='form-control' /><input id='addCancle' class='col-sm-6  layui-layer-close layui-layer-close1 btn btn-danger' type='button' value='取消'></div></div></div>";
         layer.open({
             type: 1,
             title: "<span class='glyphicon glyphicon-plus'>增加</span>",
@@ -171,11 +190,14 @@
         layer.load(1);
         var addUserType=$("#addUserType").val();
         var userDese=$("#addUserDesc").val();
+        var userTimes=$("#adduserTimes").val();
+        var  userSale=$("#addUserSale").val();
         $.ajax({
             url:"/type/addUserType",
             dataType:"JSON",
+
             method:"POST",
-            data:{'userType':addUserType,'userDese':$("#addUserDesc").val()},
+            data:{'userType':addUserType,'userDese':$("#addUserDesc").val(),'userTimes':userTimes,'userSale':userSale},
             success:function (res) {
                 layer.closeAll('loading');
                 if(res==0){
@@ -188,7 +210,10 @@
               +  "<div  class='animated flip  panel panel-success'><div class='panel-heading'> "
               +  "<input type='hidden' id='typeId' value='"+res+"'/>"
               +"<h3 id='"+res+"type' class='panel-title'>"+addUserType+"</h3> </div> <div class='panel-body'>"
-               +"<p class='lead'>套餐描述：</p> <p  id='"+res+"desc'>"+ userDese+"</p></div>  <div class='panel-footer'>"
+               +"<div class='form-group'><label>套餐描述：</label> <span  id='"+res+"desc'>"+ userDese+"</span></div> "
+               +"<div class='form-group'><label>服务次数:</label><span id='"+res+"Times'>"+userTimes+"</span></div>"
+               +"<div class='form-group'><label>售价:</label><span id='"+res+"Sale'>"+userSale+"</span></div>"
+               +" </div><div class='panel-footer'>"
                +"<button onclick='updateType("+res+")' class='btn btn-success'>修改</button>"
                +"<button class='btn btn-danger' onclick='deleteType("+res+")'>删除</button></div> </div>  </div>"
                $("#mainDiv").append(panelHtml);

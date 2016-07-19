@@ -44,8 +44,33 @@ public class Constant {
             put(3, "按地址查询");
         }
     };
+    public static Map<Integer, String> EMP_STATE = new HashMap<Integer, String>() {
+        private static final long serialVersionUID = 4896121447465087526L;
 
+        {
+            put(0, "在职");
+            put(1, "离职");
+            put(2, "待离职");
+        }
+    };
+    public static Map<String,String> SHOP_NAME=new HashMap<String, String>(){
+        private static final long serialVersionUID = -5071833054046376165L;
 
+        {
+            // 以后在加载的时候从缓存里面进行加载
+            put("HOME0001", "会展店");
+            put("HOME0002", "总部");
+        }
+    };
+    /**
+     * common包
+     */
+    public static String COMMON = "common";
+    public static String CUSTOMER = "customer";
+    public static String EMP = "emp";
 
+    public static void main(String[] args) {
+        System.out.println(Constant.SEARCH_CONDITION.get(0));
 
+    }
 }

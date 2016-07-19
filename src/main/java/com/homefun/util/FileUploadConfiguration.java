@@ -6,6 +6,8 @@
 
 package com.homefun.util;
 
+import java.awt.*;
+
 /**
  * 用来读取存放上（application）传文件的路径
  */
@@ -24,6 +26,30 @@ public class FileUploadConfiguration {
      * @return
      */
     private String sliderPath;
+    /**
+     * 字体
+     */
+    private String fontFamile="字体";
+
+    public String getFontFamile() {
+        return fontFamile;
+    }
+    private int fontStyle= Font.BOLD;
+    /**
+     * 字体大小
+     */
+    private int fontSize=20;
+    public void setFontFamile(String fontFamile) {
+        this.fontFamile = fontFamile;
+    }
+
+    public int getFontStyle() {
+        return fontStyle;
+    }
+
+    public void setFontStyle(int fontStyle) {
+        this.fontStyle = fontStyle;
+    }
 
     public String getSliderPath() {
         return sliderPath;

@@ -69,7 +69,7 @@ public class Customer extends BaseEntity {
      * 用户类型：年卡，月卡，体验卡
      */
     @Column(name = "CUSTOMER_TYPE")
-    @JsonIgnore
+//    @JsonIgnore
     private Integer customerType;
 
     /**

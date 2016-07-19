@@ -48,15 +48,16 @@
             if (!$export.length) {
                 $export = $([
                     '<div class="export btn-group">',
-                        '<button class="btn btn-default' +
-                            sprintf(' btn-%s', this.options.iconSize) +
-                            ' dropdown-toggle" ' +
-                            'data-toggle="dropdown" type="button">',
-                            sprintf('<i class="%s %s"></i> ', this.options.iconsPrefix, this.options.icons.export),
-                            '<span class="caret"></span>',
-                        '</button>',
-                        '<ul class="dropdown-menu" role="menu">',
-                        '</ul>',
+                    '<button class="btn' +
+                    sprintf(' btn-%s', this.options.buttonsClass) +
+                    sprintf(' btn-%s', this.options.iconSize) +
+                    ' dropdown-toggle" ' +
+                    'data-toggle="dropdown" type="button">',
+                    sprintf('<i class="%s %s"></i> ', this.options.iconsPrefix, this.options.icons.export),
+                    '<span class="caret"></span>',
+                    '</button>',
+                    '<ul class="dropdown-menu" role="menu">',
+                    '</ul>',
                     '</div>'].join('')).appendTo($btnGroup);
 
                 var $menu = $export.find('.dropdown-menu'),
@@ -73,9 +74,9 @@
                 $.each(exportTypes, function (i, type) {
                     if (TYPE_NAME.hasOwnProperty(type)) {
                         $menu.append(['<li data-type="' + type + '">',
-                                '<a href="javascript:void(0)">',
-                                    TYPE_NAME[type],
-                                '</a>',
+                            '<a href="javascript:void(0)">',
+                            TYPE_NAME[type],
+                            '</a>',
                             '</li>'].join(''));
                     }
                 });
@@ -90,7 +91,7 @@
                         };
 
                     if (that.options.exportDataType === 'all' && that.options.pagination) {
-                        that.$el.one('load-success.bs.table page-change.bs.table', function () {
+                        that.$el.one(that.options.sidePagination === 'server' ? 'post-body.bs.table' : 'page-change.bs.table', function () {
                             doExport();
                             that.togglePagination();
                         });

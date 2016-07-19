@@ -9,6 +9,8 @@
     <result column="USER_TYPE" jdbcType="VARCHAR" property="userType" />
     <result column="USER_DESE" jdbcType="VARCHAR" property="userDese" />
     <result column="USER_DATE" jdbcType="TIMESTAMP" property="userDate" />
+    <result column="USER_TIMES" jdbcType="INTEGER" property="userTimes" />
+    <result column="USER_SALE" jdbcType="INTEGER" property="userSale" />
 
   </resultMap>
 </mapper>

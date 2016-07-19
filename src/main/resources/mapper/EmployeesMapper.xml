@@ -14,7 +14,28 @@
     <result column="EMP_AGE" jdbcType="INTEGER" property="empAge" />
     <result column="EMP_PHOTO" jdbcType="VARCHAR" property="empPhoto" />
     <result column="EMP_DESE" jdbcType="VARCHAR" property="empDese" />
-    <result column="EMP_OTHER" jdbcType="INTEGER" property="empOther" />
+    <result column="EMP_OTHER" jdbcType="VARCHAR" property="empOther" />
     <result column="EMP_BELONG" jdbcType="VARCHAR" property="empBelong"/>
+    <result column="EMP_GROUP" jdbcType="VARCHAR" property="empGroup"/>
+    <result column="EMP_JOB" jdbcType="VARCHAR" property="empJob"/>
+    <result column="EMP_STATE" jdbcType="INTEGER" property="empState"/>
   </resultMap>
+  <select id="selectByRequest" parameterType="java.util.HashMap" resultType="com.homefun.model.Employees">
+    SELECT em.ID , em.EMP_NAME empName,em.EMP_PHOTO empPhoto, shop.SHOP_NAME shopName,em.EMP_STATE empState,
+    job.JOB_NAME jobName from employees em
+    LEFT JOIN job as job on em.EMP_JOB=job.JOB_ID
+    LEFT JOIN shop as shop on em.EMP_BELONG=shop.SHOP_NUM
+    <if test="empState==null">
+      WHERE EMP_STATE=0
+    </if>
+    <if test="empState!=null">
+      WHERE EMP_STATE=#{empState}
+    </if>
+   <if test="empName!=null">
+     AND em.EMP_NAME LIKE CONCAT('%', #{empName},'%')
+   </if>
+    <if test="empBelong!=null">
+      AND em.EMP_BELONG = #{empBelong}
+    </if>
+  </select>
 </mapper>

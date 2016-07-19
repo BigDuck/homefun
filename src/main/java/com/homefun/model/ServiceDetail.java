@@ -1,9 +1,11 @@
 package com.homefun.model;
 
-import com.sun.tools.javac.util.List;
+import com.homefun.util.StringUtils;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "service_detail")
 public class ServiceDetail  extends BaseEntity {
@@ -27,7 +29,8 @@ public class ServiceDetail  extends BaseEntity {
      */
     @Column(name = "SERVICE_TIME")
     private Date serviceTime;
-
+    @Column(name = "SERVICE_ETIME")
+    private Date serviceEtime;
     /**
      * 服务的订单号
      */
@@ -50,7 +53,7 @@ public class ServiceDetail  extends BaseEntity {
      * 其他
      */
     @Column(name = "SERVICE_OTHER")
-    private Integer serviceOther;
+    private String serviceOther;
 
     /**
      * 第几次服务
@@ -62,12 +65,79 @@ public class ServiceDetail  extends BaseEntity {
      */
     @Transient
     private List<String> emp_list;
+    /**
+     * 应收取费用should pay
+     */
+    @Column(name = "SERVICE_SPAY")
+    private Integer serviceSpay;
+    /**
+     * 实际收取费用
+     */
+    @Column(name = "SERVICE_PAY")
+    private Integer servicePay;
+    /**
+     * 套餐类型
+     */
+    @Column(name = "SERVICE_TYPE")
+    private Integer serviceType;
+    @Transient
+    private String serviceTypeName;
+
+    public String getServiceTypeName() {
+        return serviceTypeName;
+    }
+
+    public void setServiceTypeName(String serviceTypeName) {
+        this.serviceTypeName = serviceTypeName;
+    }
+
+    public Date getServiceEtime() {
+        return serviceEtime;
+    }
+
+    public void setServiceEtime(Date serviceEtime) {
+        this.serviceEtime = serviceEtime;
+    }
+
+    public Integer getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(Integer serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public Integer getServicePay() {
+        return servicePay;
+    }
+
+    public void setServicePay(Integer servicePay) {
+        this.servicePay = servicePay;
+    }
+
+    public Integer getServiceSpay() {
+        return serviceSpay;
+    }
+
+    public void setServiceSpay(Integer serviceSpay) {
+        this.serviceSpay = serviceSpay;
+    }
 
     public List<String> getEmp_list() {
+        emp_list=new ArrayList<String>();
+        if(StringUtils.isNoneEmtryAndNull(this.getEmpNum())){
+            String []res=this.empNum.split("-");
+            for (int i = 0; i <res.length ; i++) {
+                this.emp_list.add(res[i]);
+                //TODO 以后直接在这边直接从redis或者其他缓存里加载数据把员工编码转换为员工名字
+            }
+        }
+
         return emp_list;
     }
 
     public void setEmp_list(List<String> emp_list) {
+
         this.emp_list = emp_list;
     }
 
@@ -184,7 +254,7 @@ public class ServiceDetail  extends BaseEntity {
      *
      * @return SERVICE_OTHER - 其他
      */
-    public Integer getServiceOther() {
+    public String getServiceOther() {
         return serviceOther;
     }
 
@@ -193,7 +263,7 @@ public class ServiceDetail  extends BaseEntity {
      *
      * @param serviceOther 其他
      */
-    public void setServiceOther(Integer serviceOther) {
+    public void setServiceOther(String serviceOther) {
         this.serviceOther = serviceOther;
     }
 
@@ -221,11 +291,16 @@ public class ServiceDetail  extends BaseEntity {
                 "serviceId='" + serviceId + '\'' +
                 ", empNum='" + empNum + '\'' +
                 ", serviceTime=" + serviceTime +
+                ", serviceEtime=" + serviceEtime +
                 ", serviceOrder='" + serviceOrder + '\'' +
                 ", serviceCallback='" + serviceCallback + '\'' +
                 ", serviceScore=" + serviceScore +
-                ", serviceOther=" + serviceOther +
+                ", serviceOther='" + serviceOther + '\'' +
                 ", serviceCount=" + serviceCount +
+                ", emp_list=" + emp_list +
+                ", serviceSpay=" + serviceSpay +
+                ", servicePay=" + servicePay +
+                ", serviceType=" + serviceType +
                 '}';
     }
 }

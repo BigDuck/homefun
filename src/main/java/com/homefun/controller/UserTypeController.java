@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Name：UserTypeController
@@ -37,6 +36,20 @@ public class UserTypeController extends BaseController {
         return "package/packageMa";
     }
 
+    /**
+     * 用于填充下来列表
+     * @return
+     */
+    @RequestMapping(value = "/simpleData",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getSimpleData(){
+        List<UserType> res = userTypeService.getUserType(new UserType());
+        List<UserType> result=new ArrayList<>();
+        for (int i = 0; i <res.size() ; i++) {
+            result.add(new UserType(res.get(i).getId(),result.get(i).getUserType()));
+        }
+        return result;
+    }
     /**
      * 更新用户类型或者说套餐
      *

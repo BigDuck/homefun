@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>安家无忧后台管理</title>
+    <meta name="keywords" content="安家无忧">
+    <meta name="description" content="厦门市思明区后埭溪28皇达大厦">
+
+    <!--[if lt IE 8]>
+    <script>
+        alert('H+已不支持IE6-8，请使用谷歌、火狐等浏览器\n或360、QQ等国产浏览器的极速模式浏览本页面！');
+    </script>
+    <![endif]-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" type="text/css" href="#{webroot}/css/bootstrap.min.css" charset="utf-8">
+    <script src="#{webroot}/js/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" href="#{webroot}/plugins/bootstraptable/bootstrap-table.min.css">
+    <script type="text/javascript" src="#{webroot}/js/bootstrap.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="#{webroot}/plugins/bootstraptable/bootstrap-table.min.js"></script>
+    <script src="#{webroot}/plugins/bootstraptable/bootstrap-table-export.js" charset="utf-8"></script>
+    <script src="#{webroot}/plugins/bootstraptable/tableExport.js"></script>
+
+    <!-- Latest compiled and minified Locales -->
+    <script src="#{webroot}/plugins/bootstraptable/bootstrap-table-zh-CN.min.js"></script>
+
+</head>
+<body>
+<div id="toolbar">
+    <select class="form-control">
+        <option value="basic">导出本页</option>
+        <option value="all">导出全部</option>
+        <option value="selected">导出选中</option>
+    </select>
+</div>
+<div class="panel-group" id="accordion">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion"
+                   href="#collapseOne">
+                    服务记录查询
+                </a>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in">
+
+            <div class="panel-body">
+                <form id="formSearch" class="form-horizontal">
+                    <div class="form-group" style="margin-top:15px">
+                        <label class="control-label col-sm-1" for="txt_search_departmentname">查询条件</label>
+                        <div class="col-sm-2">
+                            <select id="selectCon" class="form-control">
+                                <option value="0">请选择</option>
+                                <option value="1">按订单号查询</option>
+                                <option value="2">按用户名查询</option>
+                                <option value="3">按地址查询</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2"><input id="params" name="params" class="form-control" placeholder="输入查询内容"
+                                                     type="text"/></div>
+                        <label class="control-label col-sm-1" for="txt_search_statu">时间</label>
+                        <div class="col-sm-4">
+                            <div class="input-daterange input-group" id="datepicker">
+                                <input type="text" id="startTime" class="form-control" name="startTime"
+                                       placeholder="选择开始时间"/>
+                                <span class="input-group-addon">到</span>
+                                <input type="text" class=" form-control" id="endTime" name="endTime"
+                                       placeholder="选择结束时间"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-2" style="text-align:left;">
+                            <div class="row">
+                                <button type="button" id="btn_query" class="btn btn-primary "
+                                        onclick="searchTable()">查询
+                                </button>
+                                <input type="reset" class="btn btn-danger " value="重置"/>
+                                <button id="btn_add" type="button" class="btn btn-info">
+                                    新增
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="exampleTableEventsToolbar" role="group" class="btn-group">
+
+    </div>
+
+
+    <table id="table">
+    </table>
+
+
+</body>
+<script src="#{webroot}/js/plugins/datapicker/bootstrap-datepicker.min.js"></script>
+<script src="#{webroot}/js/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript">
+    var $table =
+    $('#table');
+    $('#datepicker').datepicker({
+        language: "zh-CN",
+        format: 'yyyy-mm-dd'
+    });
+    $(function () {
+        $('#table').bootstrapTable({
+            url: '/admin/detail/list',
+            dataField: "rows",
+            columns: [
+                {
+                    field: 'state',
+                    checkbox: true,
+                    align: 'center',
+                    valign: 'middle'
+                },
+
+                {
+                    field: 'serviceId',
+                    title: 'ID',
+                    visible: false
+                },
+                {
+                    field: 'emp_list',
+                    title: '服务人员',
+                }, {
+                    field: 'serviceTypeName',
+                    title: '用户类型',
+                },
+                {
+                    field: 'serviceCount',
+                    title: '服务次数'
+                },
+                {
+                    field: 'serviceOrder',
+                    title: '订单号',
+                    formatter: orderFormatter,
+                    events: operateEvents
+                }
+                , {
+                    field: 'serviceTime',
+                    title: '服务时间',
+                    formatter: formatterDate
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: doSomethingFormatter,
+                    events: showDetailEvents
+                }
+
+            ],
+            pagination: true,//显示分页
+            showRefresh: true,//显示刷新按钮
+            showColumns: true,//显示勾选列显示按钮
+            striped: true,  //表格显示条纹
+            pageList: [10, 25, 50, 100, 'ALL'],
+            showPaginationSwitch: true,
+            minimumCountColumns: 2,
+            cache: false,
+            //  switchable: true,
+            showExport: true,
+            idField: 'serviceId',
+            uniqueId: "serviceId",
+            sidePagination: "server",
+            exportDataType: "basic",
+            toolbar: "#exampleTableEventsToolbar",//工具按钮用哪个容器
+            rowStyle: function (row, index) {
+                var classes = ['active', 'success', 'info', 'warning', 'danger'];
+                var res = index % 4;
+                return {
+                    classes: classes[res]
+                };
+            },
+
+        });
+
+
+    });
+    function doSomethingFormatter(value) {
+        var res = "<button class='btn btn-success detail'  title='点击查看订单详情'>详情</button>"
+                + "<button class='btn btn-info updateDetail' title='点击修改' >修改</button>"
+                + "<button class='btn btn-danger deleteDetail'  title='点击删除' >删除</button>";
+        return res;
+    }
+    function orderFormatter(value) {
+        return "<a href='javascript:(0)' class='orderBuy' title='点击查看订单购买记录'>" + value + "</a>";
+    }
+    window.operateEvents = {
+        'click .orderBuy': function (e, value, row, index) {
+            console.log(value);
+        }
+
+    };
+    window.showDetailEvents = {
+        'click .detail': function (e, value, row, index) {
+            console.log(row['serviceId']);
+            detailMsg(row['serviceId'],'detail');
+
+        },
+        'click .updateDetail': function (e, value, row, index) {
+            detailMsg(row['serviceId'],'update');
+        },
+        'click .deleteDetail': function (e, value, row, index) {
+            console.log(row['serviceId']);
+            deleteOrder(row['serviceId']);
+        }
+    };
+    /**
+     * 格式化时间
+     * @param value
+     * @returns {string}
+     */
+    function formatterDate(value) {
+        var pjDate = "<p>未知</p>";
+        if (value == undefined || value == null || value == "") {
+            pjDate = "<p>未知</p>"
+        } else {
+            var date = new Date(value);
+            pjDate = date.getFullYear() + "年" + (date.getMonth()+1)+ "月" + date.getDate() + "日" + date.getHours() + "时" + date.getMinutes() + "分";
+        }
+
+        return pjDate;
+    }
+    function searchTable() {
+        console.log("点击搜索");
+
+        if ($("#selectCon").val() == "0" && $("#params").val() != "") {
+            layer.tips("选我选我", "#selectCon");
+            layer.alert("请选择查询条件");
+            return false;
+        }
+        var dataUrl="/admin/detail/list";
+        var isFirst = 0;
+        if ($("#startTime").val() != null && $("#startTime").val() != "") {
+            dataUrl += "?startTime=" + $("#startTime").val() + "&endTime=" + $("#endTime").val();
+            isFirst = 1;
+        }
+        if ($("#params").val() != null && $("#params").val() != "") {
+            if (isFirst == 1) {
+                dataUrl += "&params=" + $("#params").val() + "&searchCondition=" + $("#selectCon").val();
+            } else {
+                dataUrl += "?params=" + $("#params").val() + "&searchCondition=" + $("#selectCon").val();
+            }
+        }
+        console.log(dataUrl);
+
+        $('#table').bootstrapTable('refresh', {
+            url: dataUrl
+        });
+    }
+
+    function deleteOrder(serviceId) {
+        var res = ($('#table').bootstrapTable('getSelections'));
+
+        layer.confirm('你确定要删除？', {
+            btn: ['取消', '确定'] //按钮
+        }, function () {
+            layer.msg('已取消', {icon: 1});
+            return false;
+        }, function () {
+            layer.load(1);
+            // 开始删除订单
+            $.ajax({
+                url: "/admin/detail/delete",
+                method: "POST",
+                data: {'serviceId': serviceId,'_method':'DELETE'},
+                dataType: "JSON",
+                success: function (msg) {
+                    layer.closeAll("loading");
+                    console.log("msg" + msg);
+                    layer.alert('删除成功!', {
+                        icon: 1,
+                        skin: 'layui-layer-molv'
+                    });
+                    $('#table').bootstrapTable('refreshOptions', {});
+                    console.log("id:over");
+                },
+                error: function (err) {
+                    layer.closeAll("loading");
+                    layer.alert('发生错误了!', {
+                        icon: 1
+                    });
+
+
+                }
+            });
+        });
+
+
+    }
+    function serviceDetail(id) {
+        window.location.href = "/admin/detail?id=" + id;
+    }
+    //content
+    function detailMsg(value,type) {
+        console.log(value);
+        layer.open({
+            type: 2,
+            title: '详情',
+            shadeClose: true,
+            shade: 0.8,
+            fix: false, //不固定
+            maxmin: true,
+            area: ['85%', '85%'],
+            content: '/admin/detail/content?serviceId='+value+'&type='+type
+        });
+    }
+    // 增加
+    $("#btn_add").click(function () {
+        layer.open({
+            type: 2,
+            title: '新增',
+            shadeClose: true,
+            shade: 0.8,
+            fix: false, //不固定
+            maxmin: true,
+            area: ['100%', '100%'],
+            content: '/admin/detail/pre'
+        });
+    });
+    $('#toolbar').find('select').change(function () {
+        var a = $(this).val();
+        $('#table').bootstrapTable('refreshOptions', {
+            exportDataType: a
+        });
+    });
+</script>
+
+<script src="#{webroot}/js/plugins/layer/layer.js"></script>
+<link rel="stylesheet" type="text/css" href="#{webroot}/js/plugins/layer/skin/layer.css" charset="UTF-8">
+<link href="#{webroot}/css/plugins/datapicker/bootstrap-datepicker.css" rel="stylesheet">
+</html>

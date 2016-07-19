@@ -61,8 +61,8 @@
         <!--<table tableName="EMPLOYEES">-->
             <!--<generatedKey column="ID" sqlStatement="Mysql" identity="true"/>-->
         <!--</table>-->
-        <table tableName="SERVICE_DETAIL">
-        <generatedKey column="SERVICE_ID" sqlStatement="Mysql" identity="true" />
+        <table tableName="shop">
+        <generatedKey column="SHOP_ID" sqlStatement="Mysql" identity="true" />
     </table>
         <!--<table tableName="USER_TYPE">-->
             <!--<generatedKey column="ID" sqlStatement="Mysql" identity="true"/>-->

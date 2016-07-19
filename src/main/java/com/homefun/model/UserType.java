@@ -30,6 +30,40 @@ public class UserType extends BaseEntity {
      */
     @Column(name = "USER_DATE")
     private Date userDate;
+    /**
+     * 服务次数
+     */
+    @Column(name = "USER_TIMES")
+    private Integer userTimes;
+    /**
+     * 套餐售价
+     */
+    @Column(name = "USER_SALE")
+    private Integer userSale;
+
+    public UserType(Integer id,String userType) {
+        this.id=id;
+        this.userType = userType;
+    }
+
+    public UserType() {
+    }
+
+    public Integer getUserTimes() {
+        return userTimes;
+    }
+
+    public void setUserTimes(Integer userTimes) {
+        this.userTimes = userTimes;
+    }
+
+    public Integer getUserSale() {
+        return userSale;
+    }
+
+    public void setUserSale(Integer userSale) {
+        this.userSale = userSale;
+    }
 
     public void setUserDate(Date userDate) {
         this.userDate =userDate;
@@ -77,10 +111,13 @@ public class UserType extends BaseEntity {
 
     @Override
     public String toString() {
-        return "UserType{" +"id="+id+
-                "userType='" + userType + '\'' +
+        return "UserType{" +
+                "id=" + id +
+                ", userType='" + userType + '\'' +
                 ", userDese='" + userDese + '\'' +
                 ", userDate=" + userDate +
+                ", userTimes=" + userTimes +
+                ", userSale=" + userSale +
                 '}';
     }
 }

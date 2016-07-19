@@ -4,6 +4,7 @@
 
 package com.homefun.service;
 
+import com.homefun.model.BTRequestParams;
 import com.homefun.model.ServiceDetail;
 
 import java.util.List;
@@ -18,4 +19,11 @@ public interface ServiceDetailService extends IService<ServiceDetail> {
      * @return 服务详情列表
      */
     List<ServiceDetail> findDetailByServiceDetail(ServiceDetail serviceDetail);
+
+    /**
+     * 列表展示服务记录
+     * @param btRequestParams
+     * @return
+     */
+    List<ServiceDetail> getDetailListByBTRquest(BTRequestParams btRequestParams);
 }

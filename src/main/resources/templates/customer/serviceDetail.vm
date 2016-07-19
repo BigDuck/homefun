@@ -5,23 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="#{webroot}/css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
     <link href="#{webroot}/css/animate.min.css" rel="stylesheet">
-   <link href="#{webroot}/css/style.min.css?v=3.2.0" rel="stylesheet">
-
+    <link href="#{webroot}/css/style.min.css?v=3.2.0" rel="stylesheet">
+    <link href="#{webroot}/js/plugins/layer/skin/layer.css">
 </head>
-
+<style>
+    footer {
+        float:right;
+        position:fixed;
+        right:0px;
+        bottom:0px;
+        z-index:20;
+    }
+    .btn-fab{
+        border-radius: 50%;
+        font-size: 24px;
+        height: 56px;
+        margin: auto;
+        min-width: 56px;
+        width: 56px;
+        padding: 0;
+        overflow: hidden;
+        -webkit-box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, .12), 0 1px 1px 0 rgba(0, 0, 0, .24);
+        box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, .12), 0 1px 1px 0 rgba(0, 0, 0, .24);
+        position: relative;
+        line-height: normal
+    }
+</style>
 <body class="gray-bg">
 <div class="row">
-    <div class="col-sm-12">
         <div class="wrapper wrapper-content">
             <div class="row animated fadeInRight">
                 <div class="col-sm-12">
                     <div class="ibox float-e-margins">
                         <div class="text-center float-e-margins p-md">
                             <span>订单号:$!{SERVICE_ORDER}</span>
-                           <p class="lead">订单服务情况</p>
+                            <p class="lead">订单服务情况</p>
                         </div>
-                    <div class="" id="ibox-content">
-                        #foreach($detail in ${details})
+                        <div class="" id="ibox-content">
+                            #foreach($detail in ${details})
 
                                 <div id="vertical-timeline" class="vertical-container light-timeline">
                                     <div class="vertical-timeline-block">
@@ -40,8 +61,8 @@
                                         </div>
                                     </div>
                                 </div>
-                        #end
-                    </div>
+                            #end
+                        </div>
                     </div>
                 </div>
             </div>
@@ -53,9 +74,40 @@
 <!-- 全局js -->
 <script src="#{webroot}/js/jquery-2.1.1.min.js"></script>
 <script src="#{webroot}/js/bootstrap.min.js?v=3.4.0"></script>
+<script src="#{webroot}/js/plugins/layer/layer.js"></script>
+<footer>
+    <div class="btn-group dropup">
+        <button type="button " class=" btn-fab btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="glyphicon glyphicon-plus"></i>        </button>
+    <div class="dropdown-menu" style="background: #fff">
+        <div>
+            <a onclick="add()" class="btn btn-danger btn-fab">
+                <i title="新增" class="glyphicon glyphicon-pencil" style="margin-top: 11px"></i>
+            </a>
+        </div>
+        <div>
+            <a href="javascript:void(0)" class="btn btn-success btn-fab">
+                <i title="返回" onclick="javascript :history.back(-1);"
+                   class="glyphicon glyphicon-backward" style="margin-top: 11px">
+                </i>
+            </a>
+        </div>
+    </div>
+    </div>
 
-
-
+</footer>
+<script type="text/javascript">
+    function add() {
+        layer.open({
+            type: 2,
+            area: ['95%', '95%'],
+            fix: false, //不固定
+            maxmin: true,
+            content: '/admin/detail/pre'
+        });
+    }
+</script>
 </body>
+
 
 </html>

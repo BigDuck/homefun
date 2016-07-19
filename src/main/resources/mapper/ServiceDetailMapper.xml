@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.homefun.dao.ServiceDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.homefun.model.ServiceDetail" >
-    <!--
-      WARNING - @mbggenerated
-    -->
-    <id column="SERVICE_ID" property="serviceId" jdbcType="VARCHAR" />
-    <result column="EMP_NUM" property="empNum" jdbcType="VARCHAR" />
-    <result column="SERVICE_TIME" property="serviceTime" jdbcType="TIMESTAMP" />
-    <result column="SERVICE_ORDER" property="serviceOrder" jdbcType="VARCHAR" />
-    <result column="SERVICE_CALLBACK" property="serviceCallback" jdbcType="VARCHAR" />
-    <result column="SERVICE_SCORE" property="serviceScore" jdbcType="INTEGER" />
-    <result column="SERVICE_OTHER" property="serviceOther" jdbcType="INTEGER" />
-    <result column="SERVICE_COUNT" property="serviceCount" jdbcType="INTEGER" />
-  </resultMap>
+<mapper namespace="com.homefun.dao.ServiceDetailMapper">
+    <resultMap id="BaseResultMap" type="com.homefun.model.ServiceDetail">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <id column="SERVICE_ID" property="serviceId" jdbcType="VARCHAR"/>
+        <result column="EMP_NUM" property="empNum" jdbcType="VARCHAR"/>
+        <result column="SERVICE_TIME" property="serviceTime" jdbcType="TIMESTAMP"/>
+        <result column="SERVICE_ORDER" property="serviceOrder" jdbcType="VARCHAR"/>
+        <result column="SERVICE_CALLBACK" property="serviceCallback" jdbcType="VARCHAR"/>
+        <result column="SERVICE_SCORE" property="serviceScore" jdbcType="INTEGER"/>
+        <result column="SERVICE_OTHER" property="serviceOther" jdbcType="VARCHAR"/>
+        <result column="SERVICE_ETIME" property="serviceEtime" jdbcType="TIMESTAMP"/>
+        <result column="SERVICE_COUNT" property="serviceCount" jdbcType="INTEGER"/>
+        <result column="SERVICE_SPAY" property="serviceSpay" jdbcType="INTEGER"/>
+        <result column="SERVICE_PAY" property="servicePay" jdbcType="INTEGER"/>
+        <result column="SERVICE_TYPE" property="serviceType" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="selectDetailByEntity" resultType="com.homefun.model.ServiceDetail"
+            parameterType="java.util.HashMap">
+        SELECT SERVICE_ID serviceId, SERVICE_ETIME serviceEtime, SERVICE_ORDER serviceOrder,EMP_NUM empNum,SERVICE_TIME serviceTime,SERVICE_COUNT serviceCount
+        ,uType.USER_TYPE serviceTypeName FROM service_detail sdetail
+        left JOIN user_type uType ON uType.ID=sdetail.SERVICE_TYPE
+        <if test="startTime!=NULL and endTime != NULL">
+            where SERVICE_TIME between #{startTime} and #{endTime}
+        </if>
+        ORDER BY SERVICE_TIME ASC
+    </select>
 </mapper>

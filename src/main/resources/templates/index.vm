@@ -17,10 +17,10 @@
     </script>
     <![endif]-->
 
-    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
-    <link href="css/font-awesome.min.css?v=4.3.0" rel="stylesheet">
-    <link href="css/animate.min.css" rel="stylesheet">
-    <link href="css/style.min.css?v=3.2.0" rel="stylesheet">
+    <link href="/css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.3.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=3.2.0" rel="stylesheet">
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg">
@@ -33,7 +33,7 @@
             <ul class="nav" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element">
-                        <span><img alt="image" class="img-circle" src="img/profile_small.jpg" /></span>
+                        <span><img alt="image" class="img-circle" src="/img/profile_small.jpg" /></span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="admin#">
                                 <span class="clear">
                                <span class="block m-t-xs"><strong class="font-bold">Beaut-zihan</strong></span>
@@ -65,7 +65,7 @@
                     </a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="J_menuItem" href="${springMacroRequestContext.contextPath}/admin/customer">订单查看</a>
+                            <a class="J_menuItem" href="${springMacroRequestContext.contextPath}/admin/customer">购买记录</a>
                         </li>
                         <li>
                             <a class="J_menuItem" href="${springMacroRequestContext.contextPath}/type/main">套餐管理</a>
@@ -74,7 +74,10 @@
                             <a class="J_menuItem" href="${springMacroRequestContext.contextPath}/order/survey">订单分布</a>
                         </li>
                         <li>
-                            <a class="J_menuItem"  href="${springMacroRequestContext.contextPath}/order/toChart" >图表统计</a>
+                            <a class="J_menuItem"  href="${springMacroRequestContext.contextPath}/order/toChart" >购买统计</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem"  href="${springMacroRequestContext.contextPath}/admin/detail/toList" >服务记录</a>
                         </li>
                     </ul>
 
@@ -90,13 +93,13 @@
                     </a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="J_menuItem" href="${springMacroRequestContext.contextPath}/admin/toemp">阿姨管理</a>
+                            <a class="J_menuItem" href="${springMacroRequestContext.contextPath}/admin/emp/toemp">阿姨管理</a>
                         </li>
                         <li>
                             <a class="J_menuItem" href="graph_flot.html">门店管理</a>
                         </li>
                         <li>
-                            <a class="J_menuItem" href="graph_morris.html">Morris.js</a>
+                            <a class="J_menuItem" href="graph_morris.html">排单</a>
                         </li>
                         <li>
                             <a class="J_menuItem" href="graph_rickshaw.html">Rickshaw</a>
@@ -420,18 +423,18 @@
 </div>
 
 <!-- 全局js -->
-<script src="js/jquery-2.1.1.min.js"></script>
-<script src="js/bootstrap.min.js?v=3.4.0"></script>
-<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
-<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-<script src="js/plugins/layer/layer.js"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js?v=3.4.0"></script>
+<script src="/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/plugins/layer/layer.js"></script>
 
 <!-- 自定义js -->
-<script src="js/hplus.min.js?v=3.2.0"></script>
-<script type="text/javascript" src="js/contabs.min.js"></script>
+<script src="/js/hplus.min.js?v=3.2.0"></script>
+<script type="text/javascript" src="/js/contabs.min.js"></script>
 
 <!-- 第三方插件 -->
-<script src="js/plugins/pace/pace.min.js"></script>
+<script src="/js/plugins/pace/pace.min.js"></script>
 
 </body>
 

@@ -38,6 +38,7 @@ public class BTRequestParams  extends BaseEntity{
      * 1 按照订单号
      * 2 用户名
      * 3 地址
+     * 4 套餐类型
      */
     private int searchCondition;
     /**
@@ -58,7 +59,9 @@ public class BTRequestParams  extends BaseEntity{
      *
      */
     private int userTypeId=0;
-
+    /**
+     * 套餐类型
+     */
 
 
     public int getUserTypeId() {

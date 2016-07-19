@@ -1,0 +1,159 @@
+<link rel="stylesheet" type="text/css" href="#{webroot}/css/bootstrap.min.css" charset="utf-8">
+<script src="#{webroot}/js/jquery-2.1.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="#{webroot}/js/plugins/layer/skin/layer.css" charset="UTF-8">
+<script type="text/javascript" src="#{webroot}/js/project/detailCRUD.js"></script>
+<body>
+<form class="form-horizontal"  role="form">
+    <div class="container" id="deMsg">
+        <div class="row">
+            <div class="form-group col-md-4">
+                <input type="hidden" id="serviceId" value="$res.serviceId" name="serviceId"/>
+                <label for="serviceTime" class="control-label">开始时间:</label>
+                <input type="text" class="form-control serviceTime" data-startend="start"
+                       data-startendelem=".serviceEtime" data-format="yyyy-MM-dd HH:mm" name="serviceTime"
+                       id="serviceTime" value="$date.format($!{res.serviceTime})" data-field="datetime" required="required" readonly>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="serviceEtime" id="labelEndTime" class="control-label">结束时间:</label>
+                <input onblur="haoTime()" required="required" type="text" class="form-control serviceEtime"
+                       data-startend="end"
+                       data-startendelem=".serviceTime" data-format="yyyy-MM-dd HH:mm" name="serviceEtime"
+                       id="serviceEtime" value="$date.format($!{res.serviceEtime})" data-field="datetime" readonly>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="serviceOrder">所属订单:</label>
+                <input required="required" type="text" placeholder="点击选择订单号" class="form-control" name="serviceOrder"
+                       id="serviceOrder"  onclick="selectOrder()"  value="$!{res.serviceOrder}">
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="serviceTypeName">套餐类型:</label>
+                <input type="text" class="form-control" value="$!{res.serviceTypeName}" id="serviceTypeName" placeholder="根据订单自动填写" readonly/>
+                <input value="$res.serviceType" required="required" type="hidden" id="serviceType" name="serviceType">
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="serviceCount">次数:</label>
+                <input required="required" type="number"  value="$!{res.serviceCount}" class="form-control" id="serviceCount" placeholder="第几次服务">
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="serviceSpay">应收金额</label>
+                <input type="number" class="form-control" value="$!{res.serviceSpay}" id="serviceSpay" placeholder="输入金额,只接收整数">
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="servicePay">实收金额</label>
+                <input type="text" class="form-control" value="$!{res.servicePay}" id="servicePay" placeholder="输入金额,只接收整数">
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="serviceScore">服务分数</label>
+                <input type="number" class="form-control"  id="serviceScore" value="$!{res.serviceScore}">
+            </div>
+            <div class="form-group control-group col-md-4">
+                <label for="">服务人员</label>
+                <input readonly required="required" type="text" class="form-control"
+                       id="serviceEmpName" value="$!{res.empNum}" onclick="selectEmp()"
+                       placeholder="点击选择服务人员"/>
+                <input type="hidden" id="serviceEmp" value="$!{res.empNum}"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label for="serviceCallback" class="control-label">反馈:</label>
+                <textarea maxlength="100" type="text" class="form-control" name="serviceCallback"
+                          id="serviceCallback">$!{res.serviceCallback}</textarea>
+                <span id="num_txt1">100</span>
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="serviceOther" class="control-label">备注:</label>
+                <textarea maxlength="100" type="text" class="form-control" name="serviceOther"
+                          id="serviceOther">$!{res.serviceOther}</textarea>
+                <span id="num_txt2">100</span>
+            </div>
+        </div>
+        <div class="row" id="btnGroups">
+
+        </div>
+    </div>
+</form>
+<div id="dtBox">
+
+</div>
+
+
+</body>
+<script type="text/javascript" src="#{webroot}/js/plugins/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var type='$type';
+        console.log(type);
+       if("update"!=type) {
+            $("input").attr("disabled","disabled");
+       }else{
+           var btnUpdate="<input type='button' onclick='upda teMsgs()' class='btn-success col-sm-3 offset3' value='更新' />";
+           var btnCancale="<input type='button' id='cancleUp()' class='btn-danger col-sm-3 offset6'   value='取消' />";
+            $("#btnGroups").append(btnUpdate+btnCancale);
+       }
+    });
+    function cancleUp(){
+       $(".layui-layer-close").click();
+     //   this.parent.layer.close();
+    }
+    function updateMsgs() {
+        // js验证表单数据
+        var serviceId=$("#serviceId").val();
+        var serviceTime = $("#serviceTime").val();
+        var serviceEtime = $("#serviceEtime").val();
+        var serviceOrder = $("#serviceOrder").val();
+        var serviceCount = $("#serviceCount").val();
+        var serviceEmp = $("#serviceEmp").val();
+        console.log(serviceTime == "");
+        if (serviceTime == null || serviceTime == "") {
+            layer.tips("请选择开始时间", '#serviceTime', {tips: [2, '#F44']});
+            return false;
+        }
+        if (serviceEtime == null || serviceEtime == "") {
+            layer.tips("请选择结束时间", '#serviceEtime', {tips: [3, '#F44']})
+            return false;
+        }
+        if (serviceOrder == null || serviceOrder == "") {
+            layer.tips("请选择所属订单", '#serviceOrder', {tips: [3, '#F44']})
+            return false;
+        }
+        if (serviceCount == null || serviceCount == "") {
+            layer.tips("请输入服务次数", '#serviceCount', {tips: [3, '#F44']})
+            return false;
+        }
+        if (serviceEmp == null || serviceEmp == "") {
+            layer.tips("请选择员工", '#serviceEmpName', {tips: [3, '#F44']})
+            return false;
+        }
+        layer.load(3);
+        $.ajax({
+            url: "/admin/detail/update",
+            dataType: "json",
+            method: "POST",
+            data: {
+                'serviceId':serviceId,
+                'serviceEtime': serviceEtime,
+                'serviceTime': serviceTime,
+                'serviceOrder': serviceOrder,
+                'serviceCount': serviceCount,
+                'empNum': serviceEmp,
+                'serviceType':$("#serviceType").val(),
+                'serviceScore':$("#serviceScore").val(),
+                'serviceSpay':$("#serviceSpay").val(),
+                'servicePay':$("#servicePay").val(),
+                'serviceCallback':$("#serviceCallback").val(),
+                'serviceOther':$("#serviceOther").val()
+            },
+            success: function (data) {
+                layer.closeAll("loading");
+                    layer.msg('更新', {icon: 6});
+            },
+            error: function (err) {
+                layer.closeAll("loading");
+                layer.msg('失败了', {icon: 5});
+
+            }
+        });
+    }
+</script>
+

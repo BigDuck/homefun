@@ -11,14 +11,15 @@ import com.homefun.model.UserType;
 import com.homefun.service.CustomerService;
 import com.homefun.service.UserTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -40,7 +41,13 @@ public class IndexController extends BaseController {
     }
 
     @RequestMapping(value = "/customer")
-    public Object customerList() {
+    public Object customerList(ModelMap map) {
+        List<UserType> res = userTypeService.getUserType(new UserType());
+        List<UserType> results=new ArrayList<>();
+        for (int i = 0; i <res.size() ; i++) {
+            results.add(new UserType(res.get(i).getId(),res.get(i).getUserType()));
+        }
+        map.put("userTypes",results);
         return "customer/customserList";
     }
 
@@ -60,7 +67,8 @@ public class IndexController extends BaseController {
 
         List<Customer> result = customerService.getCustomersByBTRequest(btRequestParams);
         Map<String, Object> totalAndRows = new HashMap<>();
-        totalAndRows.put("total", new PageInfo<Customer>(result).getTotal());
+
+        totalAndRows.put("total", new PageInfo<>(result).getTotal());
         totalAndRows.put("rows", result);
 
         return totalAndRows;
@@ -99,6 +107,19 @@ public class IndexController extends BaseController {
         myLogeer.info("更新结果{}", res);
         return res;
     }
-
-
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public @ResponseBody Object deleteCustomer(Customer customer){
+        customer.setCustomerRtime(new Date());
+        myLogeer.info("--->{}:",customer);
+        customer.setCustomerIsdel(true);
+        int res=customerService.updateNotNull(customer);
+        return res;
+    }
+    @InitBinder
+    protected void initBinder(HttpServletRequest request,
+                              ServletRequestDataBinder binder) throws Exception {
+        System.out.println("-----------------");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+        //initBinder(request, binder);
+    }
 }

@@ -27,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @SpringBootApplication
 @EnableCaching
 @EnableAutoConfiguration
-//@EnableScheduling //定时任务
+//@EnableScheduling
 public class Index  extends WebMvcConfigurerAdapter
 {
     @Autowired
