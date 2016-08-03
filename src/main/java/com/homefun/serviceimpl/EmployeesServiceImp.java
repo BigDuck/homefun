@@ -74,7 +74,7 @@ public class EmployeesServiceImp extends BaseService<Employees> implements Emplo
 
             params.put("empName",empListRequest.getParams());
         }
-        if(empListRequest.getShop_id()!=null){
+        if(StringUtils.isNoneEmtryAndNull(empListRequest.getShop_id())){
             params.put("empBelong",empListRequest.getShop_id());
         }
         if (empListRequest.isPaging()) {

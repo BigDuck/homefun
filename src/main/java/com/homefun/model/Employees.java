@@ -7,7 +7,6 @@ package com.homefun.model;
 import com.homefun.util.Constant;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 
 /**
  * 员工基本信息类

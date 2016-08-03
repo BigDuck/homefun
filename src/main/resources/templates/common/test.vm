@@ -14,7 +14,6 @@
 </head>
 <body>
 <div class="container" id="crop-avatar">
-
     <!-- Current avatar -->
     <div class="avatar-view" title="Change the avatar">
         <img src="/img/a1.jpg" alt="Avatar">

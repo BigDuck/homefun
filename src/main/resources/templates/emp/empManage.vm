@@ -36,24 +36,24 @@
                         <div class="form-group" style="margin-top:15px">
                             <label class="control-label col-sm-1" for="txt_search_departmentname">按门店查找</label>
                             <div class="col-sm-2">
-                                <select id="selectCon" class="form-control">
-                                    <option value="0">选择门店</option>
-                                    <option value="1">订单号</option>
-                                    <option value="2">用户名</option>
-                                    <option value="3">地址</option>
+                                <select id="shopNum" class="form-control">
+                                    <option value="">选择门店</option>
+                                    #foreach($shop in $shopList)
+                                        <option value="$shop.shopNum">$shop.shopName</option>
+                                    #end
                                 </select>
                             </div>
                             <div class="col-sm-2"><input id="params" name="params" class="form-control"
                                                          placeholder="输入阿姨名字"
                                                          type="text"/></div>
-                            <label class="control-label col-sm-1" for="txt_search_statu">类型</label>
+                            <label class="control-label col-sm-1" for="txt_search_statu">状态</label>
                             <div class="col-sm-2">
-                                <select class="form-control">
-                                    <option>无忧阿姨LV1</option>
-                                    <option>无忧阿姨LV2</option>
-                                    <option>无忧阿姨LV3</option>
-                                    <option>无忧阿姨LV4</option>
-                                    <option>无忧阿姨LV5</option>
+                                <select id="empState" class="form-control">
+                                    <option value="0">所有</option>
+                                    <option value="1">在职</option>
+                                    <option value="2">离职</option>
+                                    <option value="3">其他</option>
+
                                 </select>
                             </div>
 
@@ -63,7 +63,7 @@
                                         新增
                                     </button>
                                     <button type="button" id="btn_query" class="btn btn-primary"
-                                            onclick="searchTable()">查询
+                                            onclick="searchEmp()">查询
                                     </button>
                                     <input type="reset" class="btn btn-danger" value="重置"/>
                                 </div>
@@ -94,16 +94,15 @@
 <script src="${springMacroRequestContext.contextPath}/js/bootstrap.min.js"></script>
 <script src="${springMacroRequestContext.contextPath}/js/plugins/layer/layer.js"></script>
 
-<script type="text/javascript">
 
-</script>
 <script>
     $(function () {
 
 
         getData();
         $("#moreData").click(function () {
-            getData();
+            var paramsJson={"offset": $("#offset").val()};
+            getData(paramsJson);
         });
         // 加载数据
     });
@@ -121,21 +120,21 @@
     /**
      * 获取数据客户数据
      */
-    function getData() {
+    function getData(paramsJson) {
 
         layer.load();
         $.ajax({
             url: "/admin/emp/getData",
             dataType: "JSON",
             method: "GET",
-            data: {"offset": $("#offset").val()},
+            data: paramsJson,
             success: function (datas) {
                 layer.closeAll("loading");
                 var listData = datas['empList'];
                 $.each(listData, function (key, value) {
                     var detail = "<div class='col-sm-4'>"
                             + "<div class='contact-box'>"
-                            + "<a href='/admin/emp/detail/'>"
+                            + "<a href='/admin/emp/detail/"+value['empId']+"'>"
                             + "<div class='col-sm-4'>"
                             + "<div class='text-center'>"
                             + "<img alt='image' class='img-circle m-t-xs img-responsive' src='" + value['empPhotoUrl'] + "'>"
@@ -172,6 +171,30 @@
             }
 
         });
+    }
+    function searchEmp(){
+        // 获取门店
+        var shop_id=$("#shopNum").val();
+        var userName=$("#params").val();
+        var state=$("#empState").val();
+        var searchType=0;
+        var paging=1;
+        if(userName!=null&&userName!=undefined&&userName!=""){
+            searchType=1;
+            paging=0;
+
+        }
+        // 获取名字
+        // 删除所有的节点
+        $("#listDiv").empty();
+        // 开始搜索
+        var params={'shop_id':shop_id,'searchType':searchType,'params':userName,'paging':paging}
+        getData(params);
+        $("#moreData").text("加载完成");
+        $("#moreData").attr("disabled", "disabled");
+    }
+    function addEmployees(){
+        window.location.href="/admin/emp/toadd";
     }
 </script>
 

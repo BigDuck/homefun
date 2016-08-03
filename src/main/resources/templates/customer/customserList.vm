@@ -380,7 +380,6 @@
                     });
                     console.log("id:" + cId);
                     $('#table').bootstrapTable('refreshOptions', {});
-                    console.log("id:over");
                 },
                 error: function (err) {
                     layer.closeAll("loading");

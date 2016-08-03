@@ -1,9 +1,11 @@
 package com.homefun.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.homefun.dao.ShopMapper;
 import com.homefun.model.EmpListRequest;
 import com.homefun.model.Employees;
 import com.homefun.service.EmployeesService;
+import com.homefun.service.ShopService;
 import com.homefun.util.Constant;
 import com.homefun.vo.SimpleEmployeesVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,11 @@ import java.util.Map;
  **/
 @Controller
 @RequestMapping("/admin/emp")
-public class EmployeesController {
+public class EmployeesController extends BaseController{
     @Autowired
     EmployeesService employeesService;
+    @Autowired
+    ShopService shopService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -51,22 +55,23 @@ public class EmployeesController {
      */
     @RequestMapping("/toemp")
     public Object empPage(ModelMap map) {
-        // 获取门点数据传到前台
-
+        // 获取门店数据传到前台
+        map.put("shopList", shopService.shopDataList());
         return Constant.EMP + "/empManage";
     }
 
     /**
      * 获取员工列表数据
+     *
      * @param empListRequest 请求封装的实体类
      * @return 员工数据
      */
     @ResponseBody
     @RequestMapping("/getData")
-    public Object getEmpData(EmpListRequest empListRequest){
-        List<Employees> result=employeesService.getSomeMsgebyEmpRequest(empListRequest);
-        List<SimpleEmployeesVO> res=new ArrayList<>();
-        for (int i = 0; i <result.size() ; i++) {
+    public Object getEmpData(EmpListRequest empListRequest) {
+        List<Employees> result = employeesService.getSomeMsgebyEmpRequest(empListRequest);
+        List<SimpleEmployeesVO> res = new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
             res.add(new SimpleEmployeesVO(
                     result.get(i).getId(),
                     result.get(i).getEmpPhoto(),
@@ -75,10 +80,10 @@ public class EmployeesController {
                     result.get(i).getJobName(),
                     result.get(i).getEmpName()));
         }
-        Map<String,Object> resultMap=new HashMap<>();
-        resultMap.put("empList",res);
-        resultMap.put("total",new PageInfo<>(result).getTotal() );
-        return  resultMap;
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("empList", res);
+        resultMap.put("total", new PageInfo<>(result).getTotal());
+        return resultMap;
     }
 
     /**
@@ -89,17 +94,40 @@ public class EmployeesController {
      * @return
      */
     @RequestMapping(value = "/detail/{empId}", method = RequestMethod.GET)
-    public Object empList(ModelMap map, @PathVariable("empId") String empId) {
-        map.put("emp",employeesService.selectByKey(empId));
+    public Object empList(ModelMap map, @PathVariable("empId") int empId) {
+        Employees res=employeesService.selectByKey(empId);
+        map.put("emp", res);
         return Constant.EMP + "/detail";
     }
+
     /**
      * 展示阿姨选项
+     *
      * @param map
      * @return
      */
     @RequestMapping("/select")
-    public Object selectList(ModelMap map){
-        return Constant.COMMON+ "/employeeSelect";
+    public Object selectList(ModelMap map) {
+        return Constant.COMMON + "/employeeSelect";
     }
+    @RequestMapping("/toadd")
+    public Object toAddEmp(ModelMap map){
+
+        return Constant.EMP+"/empAdd";
+    }
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public Object addEmployees(Employees employees){
+        myLogeer.info("添加的{}",employees.toString());
+        int result; // 0 失败 1成功
+        try {
+          result= employeesService.save(employees);
+        }catch (Exception e){
+            //TODO 此处未进行异常友好化的处理
+            e.printStackTrace();
+            result= 0;
+        }
+        return result;
+    }
+
 }

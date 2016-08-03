@@ -120,12 +120,12 @@ public class UploadController extends BaseController {
         //   System.out.println(realPath);
         //需要上传的路径，我的路径根据用户的和当前日期划分路径
         String resourcePath = "upload/image";
+        Date date = new Date();
 
+        String photoName=date.getTime()+"";
         if (imageFile != null) {
             try {
                 //文件名
-                Date date = new Date();
-                String photoName=date.getTime()+"";
                 photoMsg.put("name",photoName);
                 //获取时间的路径
                 //  String fileName = FileUploadHelper.getUniqueName(file.getOriginalFilename());
@@ -151,8 +151,8 @@ public class UploadController extends BaseController {
                 }
             } catch (Exception e) {
                 // TODO: handle exception
-                e.printStackTrace();
-                return 0;
+                System.out.println(e.toString());
+                return e.getCause();
             }
 
         }

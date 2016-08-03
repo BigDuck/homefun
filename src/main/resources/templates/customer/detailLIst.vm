@@ -227,7 +227,6 @@
         return pjDate;
     }
     function searchTable() {
-        console.log("点击搜索");
 
         if ($("#selectCon").val() == "0" && $("#params").val() != "") {
             layer.tips("选我选我", "#selectCon");

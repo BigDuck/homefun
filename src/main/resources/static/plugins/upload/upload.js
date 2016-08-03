@@ -266,7 +266,7 @@
         },
 
         submitDone: function (data) {
-            console.log(data);
+            console.log(JSON.stringify(data));
 
             if ($.isPlainObject(data) && data.state === 200) {
 
@@ -275,8 +275,13 @@
 
                     if (this.support.datauri || this.uploaded) {
                         this.uploaded = false;
-                        this.alert("上传成功")
-                   //     this.cropDone();
+                        this.alert("上传成功");
+                        var filepath="/images/"+data.name+"/"+data.name;
+                        parent.$('#empPhotoImg').attr("src","/images/"+data.name+"/"+data.name+"_s_100.jpg");
+                        parent.$('#empPhoto').val(filepath);
+                        parent.layer.closeAll();
+
+                        //     this.cropDone();
                     } else {
                         this.uploaded = true;
                         this.$avatarSrc.val(this.url);
